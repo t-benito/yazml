@@ -1,18 +1,12 @@
-//! By convention, root.zig is the root source file when making a package.
-const std = @import("std");
-const Io = std.Io;
+const vec2 = @import("vec2.zig");
 
-/// This is a documentation comment to explain the `printAnotherMessage` function below.
-///
-/// Accepting an `Io.Writer` instance is a handy way to write reusable code.
-pub fn printAnotherMessage(writer: *Io.Writer) Io.Writer.Error!void {
-    try writer.print("Run `zig build test` to run the tests.\n", .{});
-}
+pub const Vec2 = vec2.Vec2;
 
-pub fn add(a: i32, b: i32) i32 {
-    return a + b;
-}
+/// 32-bit integer vector2
+pub const Vec2i = Vec2(i32);
 
-test "basic add functionality" {
-    try std.testing.expect(add(3, 7) == 10);
-}
+/// 32-bit floating vector2
+pub const Vec2f = Vec2(f32);
+
+/// 64-bit floating vector2
+pub const Vec2d = Vec2(f64);
