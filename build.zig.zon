@@ -1,0 +1,11 @@
+.{
+    .name = .yazml,
+    .version = "0.0.1",
+    .fingerprint = 0x7c4b30da58c16897,
+    .minimum_zig_version = "0.17.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
