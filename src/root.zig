@@ -13,12 +13,3 @@ pub const Vec2f = Vec2(f32);
 
 /// 64-bit floating vector2
 pub const Vec2d = Vec2(f64);
-
-const std = @import("std");
-test "test_dot" {
-    const vec = Vec2f.init(0, 2);
-    const vec2_ = Vec2f.init(32, 5);
-
-    std.debug.print("{}\n", .{vec.dot(vec2_, .left)});
-    std.debug.print("{}\n", .{vec.dot(vec2_, .right)});
-}
