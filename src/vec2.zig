@@ -44,10 +44,7 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` resulting from component-wise addition of another vector `vec`.
         pub fn addV(self: *const Self, vec: Self) Self {
-            return .{
-                .x = self.x + vec.x,
-                .y = self.y + vec.y,
-            };
+            return self.add(vec.x, vec.y);
         }
 
         /// Returns a new `Vec2` resulting from dividing this vector's components by scalar values `x` and `y`.
@@ -60,10 +57,7 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` resulting from component-wise division by another vector `vec`.
         pub fn divV(self: *const Self, vec: Self) Self {
-            return .{
-                .x = self.x / vec.x,
-                .y = self.y / vec.y,
-            };
+            return self.div(vec.x, vec.y);
         }
 
         /// Adds scalar amounts `x` and `y` to this vector in-place.
@@ -76,8 +70,7 @@ pub fn Vec2(comptime T: type) type {
         /// Adds another vector `vec` to this vector in-place.
         /// If you want to return a new vector without modifying the original, use `addV()` instead.
         pub fn plusEqV(self: *Self, vec: Self) void {
-            self.x += vec.x;
-            self.y += vec.y;
+            self.plusEq(vec.x, vec.y);
         }
 
         /// Divides this vector's components by scalar values `x` and `y` in-place.
@@ -90,8 +83,7 @@ pub fn Vec2(comptime T: type) type {
         /// Divides this vector by another vector `vec` component-wise in-place.
         /// If you want to return a new vector without modifying the original, use `divV()` instead.
         pub fn divEqV(self: *Self, vec: Self) void {
-            self.x /= vec.x;
-            self.y /= vec.y;
+            self.divEq(vec.x, vec.y);
         }
 
         /// Returns a new normalized `Vec2` scaled to unit length (1).
