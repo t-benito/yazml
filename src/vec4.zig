@@ -1,6 +1,6 @@
 const std = @import("std");
 
-/// A generic 3D vector struct parameterized by numerical type `T`.
+/// A generic 4D vector struct parameterized by numerical type `T`.
 pub fn Vec4(comptime T: type) type {
     return struct {
         const Self = @This();
