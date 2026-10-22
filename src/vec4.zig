@@ -14,13 +14,17 @@ pub fn Vec4(comptime T: type) type {
         /// W component of the vector.
         w: T,
 
+        /// `(1, 0, 0, 0)`
         pub const UNIT_X = Self.init(1, 0, 0, 0);
+        /// `(0, 1, 0, 0)`
         pub const UNIT_Y = Self.init(0, 1, 0, 0);
+        /// `(0, 0, 1, 0)`
         pub const UNIT_Z = Self.init(0, 0, 1, 0);
+        /// `(0, 0, 0, 1)`
         pub const UNIT_W = Self.init(0, 0, 0, 1);
-        /// Zero vector `(0, 0, 0)`.
+        /// Zero vector `(0, 0, 0, 0)`.
         pub const ZERO = Self.init(0, 0, 0, 0);
-        /// One vector `(1, 1, 1)`.
+        /// One vector `(1, 1, 1, 1)`.
         pub const ONE = Self.init(1, 1, 1, 1);
 
         /// Initializes and returns a new 3D vector with the given `x`, `y`, and `z` coordinates.
