@@ -27,7 +27,7 @@ pub fn Vec4(comptime T: type) type {
         /// One vector `(1, 1, 1, 1)`.
         pub const ONE = Self.init(1, 1, 1, 1);
 
-        /// Initializes and returns a new 3D vector with the given `x`, `y`, and `z` coordinates.
+        /// Initializes and returns a new 4D vector with the given `x`, `y`, `z` and `w` coordinates.
         pub fn init(x: T, y: T, z: T, w: T) Self {
             return .{
                 .x = x,
@@ -51,7 +51,7 @@ pub fn Vec4(comptime T: type) type {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w);
         }
 
-        /// Returns a new `Vec4` resulting from adding scalar components `x`, `y`, and `z` to this vector.
+        /// Returns a new `Vec4` resulting from adding scalar components `x`, `y`, `z` and `w` to this vector.
         pub fn add(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return .{
                 .x = self.x + x,
@@ -63,10 +63,10 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from component-wise addition of another vector `vec`.
         pub fn addV(self: *const Self, vec: Self) Self {
-            return self.add(vec.x, vec.y, vec.z);
+            return self.add(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec3` resulting from subtracting scalar components `x`, `y`, and `z` from this vector.
+        /// Returns a new `Vec3` resulting from subtracting scalar components `x`, `y`, `z` and `w` from this vector.
         pub fn sub(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return .{
                 .x = self.x - x,
@@ -76,12 +76,12 @@ pub fn Vec4(comptime T: type) type {
             };
         }
 
-        /// Returns a new `Vec3` resulting from component-wise subtraction of another vector `vec`.
+        /// Returns a new `Vec4` resulting from component-wise subtraction of another vector `vec`.
         pub fn subV(self: *const Self, vec: Self) Self {
-            return self.sub(vec.x, vec.y, vec.z);
+            return self.sub(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec3` resulting from dividing this vector's components by scalar values `x`, `y`, and `z`.
+        /// Returns a new `Vec4` resulting from dividing this vector's components by scalar values `x`, `y`, `z` and `w`.
         pub fn div(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return .{
                 .x = self.x / x,
@@ -91,12 +91,12 @@ pub fn Vec4(comptime T: type) type {
             };
         }
 
-        /// Returns a new `Vec3` resulting from component-wise division by another vector `vec`.
+        /// Returns a new `Vec4` resulting from component-wise division by another vector `vec`.
         pub fn divV(self: *const Self, vec: Self) Self {
-            return self.div(vec.x, vec.y, vec.z);
+            return self.div(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec3` resulting from multiplying this vector's components by scalar values `x`, `y`, and `z`.
+        /// Returns a new `Vec4` resulting from multiplying this vector's components by scalar values `x`, `y`, `z` and `w`.
         pub fn mul(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return .{
                 .x = self.x * x,
@@ -106,9 +106,9 @@ pub fn Vec4(comptime T: type) type {
             };
         }
 
-        /// Returns a new `Vec3` resulting from component-wise multiplication by another vector `vec`.
+        /// Returns a new `Vec4` resulting from component-wise multiplication by another vector `vec`.
         pub fn mulV(self: *const Self, vec: Self) Self {
-            return self.mul(vec.x, vec.y, vec.z);
+            return self.mul(vec.x, vec.y, vec.z, vec.w);
         }
     };
 }
