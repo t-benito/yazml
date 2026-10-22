@@ -24,7 +24,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Calculates and returns the magnitude (length) of the vector.
-        pub fn length(self: *const Self) T {
+        pub fn len(self: *const Self) T {
             // TODO: this seems to crash for some reason with a larger size (on integers)
             // (i tested it only with 300k dont know the exact amount it does)
             const res = (self.x * self.x) + (self.y * self.y);
@@ -32,6 +32,10 @@ pub fn Vec2(comptime T: type) type {
                 @sqrt(res)
             else
                 @intCast(std.math.sqrt(@abs(res)));
+        }
+
+        pub fn lenSqr(self: *const Self) T {
+            return (self.x * self.x) + (self.y * self.y);
         }
 
         /// Returns a new `Vec2` resulting from adding scalar components `x` and `y` to this vector.
@@ -47,17 +51,44 @@ pub fn Vec2(comptime T: type) type {
             return self.add(vec.x, vec.y);
         }
 
-        /// Returns a new `Vec2` resulting from dividing this vector's components by scalar values `x` and `y`.
-        pub fn div(self: *const Self, x: T, y: T) Self {
+        pub fn sub(self: *const Self, x: T, y: T) Self {
             return .{
+                .x = self.x - x,
+                .y = self.y - y,
+            };
+        }
+
+        pub fn subV(self: *const Self, vec: Self) Self {
+            return self.add(vec.x, vec.y);
+        }
+
+        /// Returns a new `Vec2` resulting from dividing this vector's components by scalar values `x` and `y`.
+        /// When the vector contains an integer type, this performs truncating division.
+        pub fn div(self: *const Self, x: T, y: T) Self {
+            return if (comptime @typeInfo(T) == .int) .{
+                .x = @divTrunc(self.x, x),
+                .y = @divTrunc(self.y, y),
+            } else .{
                 .x = self.x / x,
                 .y = self.y / y,
             };
         }
 
         /// Returns a new `Vec2` resulting from component-wise division by another vector `vec`.
+        /// When the vector contains an integer type, this performs truncating division.
         pub fn divV(self: *const Self, vec: Self) Self {
             return self.div(vec.x, vec.y);
+        }
+
+        pub fn mul(self: *const Self, x: T, y: T) Self {
+            return .{
+                .x = self.x * x,
+                .y = self.y * y,
+            };
+        }
+
+        pub fn mulV(self: *const Self, vec: Self) Self {
+            return self.mul(vec.x, vec.y);
         }
 
         /// Adds scalar amounts `x` and `y` to this vector in-place.
@@ -73,6 +104,15 @@ pub fn Vec2(comptime T: type) type {
             self.plusEq(vec.x, vec.y);
         }
 
+        pub fn subEq(self: *Self, x: T, y: T) void {
+            self.x -= x;
+            self.y -= y;
+        }
+
+        pub fn subEqV(self: *Self, vec: Self) void {
+            self.subEq(vec.x, vec.y);
+        }
+
         /// Divides this vector's components by scalar values `x` and `y` in-place.
         /// If you want to return a new vector without modifying the original, use `div()` instead.
         pub fn divEq(self: *Self, x: T, y: T) void {
@@ -84,6 +124,15 @@ pub fn Vec2(comptime T: type) type {
         /// If you want to return a new vector without modifying the original, use `divV()` instead.
         pub fn divEqV(self: *Self, vec: Self) void {
             self.divEq(vec.x, vec.y);
+        }
+
+        pub fn mulEq(self: *Self, x: T, y: T) void {
+            self.x *= x;
+            self.y *= y;
+        }
+
+        pub fn mulEqV(self: *Self, vec: Self) void {
+            self.mulEq(vec.x, vec.y);
         }
 
         /// Returns a new normalized `Vec2` scaled to unit length (1).

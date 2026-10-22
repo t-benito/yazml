@@ -82,16 +82,23 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Returns a new `Vec4` resulting from dividing this vector's components by scalar values `x`, `y`, `z` and `w`.
+        /// When the vector contains an integer type, this function truncating division.
         pub fn div(self: *const Self, x: T, y: T, z: T, w: T) Self {
-            return .{
+            return if (comptime @typeInfo(T) == .float) .{
                 .x = self.x / x,
                 .y = self.y / y,
                 .z = self.z / z,
                 .w = self.w / w,
+            } else .{
+                .x = @divTrunc(self.x, x),
+                .y = @divTrunc(self.y, y),
+                .z = @divTrunc(self.z, z),
+                .w = @divTrunc(self.w, w),
             };
         }
 
         /// Returns a new `Vec4` resulting from component-wise division by another vector `vec`.
+        /// When the vector contains an integer type, this function truncating division.
         pub fn divV(self: *const Self, vec: Self) Self {
             return self.div(vec.x, vec.y, vec.z, vec.w);
         }
