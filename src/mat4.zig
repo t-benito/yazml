@@ -1,10 +1,10 @@
 const std = @import("std");
 const m = @import("root.zig");
 
+/// A generic 4 by 4 matrix parameterized by numerical type `T`.
 pub fn Mat4(comptime T: type) type {
     const Vec4 = m.Vec4(T);
     const Vec3 = m.Vec3(T);
-
     return struct {
         const Self = @This();
 
@@ -12,12 +12,14 @@ pub fn Mat4(comptime T: type) type {
 
         pub const ZERO = Self.init(Vec4.ZERO, Vec4.ZERO, Vec4.ZERO, Vec4.ZERO);
 
+        /// Returns a new `Mat4` with the given columns.
         pub fn init(col0: Vec4, col1: Vec4, col2: Vec4, col3: Vec4) Self {
             return .{
                 .cols = [4]Vec4{ col0, col1, col2, col3 },
             };
         }
 
+        /// Returns a copy of the first row of this matrix.
         pub fn row0(self: *const Self) Vec4 {
             return Vec4.init(
                 self.cols[0].x,
@@ -27,6 +29,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns a copy of the second row of this matrix.
         pub fn row1(self: *const Self) Vec4 {
             return Vec4.init(
                 self.cols[0].y,
@@ -36,6 +39,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns a copy of the third row of this matrix.
         pub fn row2(self: *const Self) Vec4 {
             return Vec4.init(
                 self.cols[0].z,
@@ -45,6 +49,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns a copy of the fourth row of this matrix.
         pub fn row3(self: *const Self) Vec4 {
             return Vec4.init(
                 self.cols[0].w,
@@ -54,6 +59,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns a perspective projection matrix.
         pub fn createPerspective(fovy: f32, aspect: f32, depthNear: f32, depthFar: f32) Self {
             std.debug.assert(fovy > 0 and fovy <= std.math.pi and aspect > 0 and depthNear > 0 and depthFar > 0);
 
@@ -77,6 +83,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns an orthographic projection matrix.
         pub fn createOrthographic(width: f32, height: f32, depthNear: f32, depthFar: f32) Self {
             const left = -width / 2;
             const right = width / 2;
@@ -100,8 +107,8 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
-        /// Calculates and returns a view matrix at `eye`, looking at `target`.
-        /// If you are using OpenGL, you must set `transpose` to `false`.
+        /// Returns a view matrix at `eye`, looking at `target`.
+        /// If you are using OpenGL, you must set `transpose` to `false` for the result of this function to be correct.
         pub fn lookAt(eye: Vec3, target: Vec3, up: Vec3) Self {
             const z = eye.sub(target).normalize();
             const x = up.cross(z).normalize();

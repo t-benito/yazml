@@ -118,22 +118,7 @@ pub fn Vec4(comptime T: type) type {
             return self.mul(vec.x, vec.y, vec.z, vec.w);
         }
 
-        pub fn abs(self: *const Self) Self {
-            return .{
-                .x = @abs(self.x),
-                .y = @abs(self.y),
-                .z = @abs(self.z),
-                .w = @abs(self.w),
-            };
-        }
-
-        pub fn absEq(self: *Self) void {
-            self.x = @abs(self.x);
-            self.y = @abs(self.y);
-            self.z = @abs(self.z);
-            self.w = @abs(self.w);
-        }
-
+        /// Returns a new normalized `Vec4` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
             const scale = 1.0 / self.len();
             return .{
@@ -144,12 +129,31 @@ pub fn Vec4(comptime T: type) type {
             };
         }
 
+        /// Returns a new normalized `Vec4` scaled to unit length (1).
         pub fn normalizeEq(self: *Self) void {
             const scale = 1.0 / self.len();
             self.x *= scale;
             self.y *= scale;
             self.z *= scale;
             self.w *= scale;
+        }
+
+        /// Returns a new `Vec4` with the absolute values of each component.
+        pub fn abs(self: *const Self) Self {
+            return .{
+                .x = @abs(self.x),
+                .y = @abs(self.y),
+                .z = @abs(self.z),
+                .w = @abs(self.w),
+            };
+        }
+
+        /// Replaces each component of this vector with its absolute value in-place.
+        pub fn absEq(self: *Self) void {
+            self.x = @abs(self.x);
+            self.y = @abs(self.y);
+            self.z = @abs(self.z);
+            self.w = @abs(self.w);
         }
     };
 }
