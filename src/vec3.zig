@@ -98,6 +98,58 @@ pub fn Vec3(comptime T: type) type {
             return self.mul(vec.x, vec.y, vec.z);
         }
 
+        pub fn plusEq(self: *Self, x: T, y: T, z: T) void {
+            self.x += x;
+            self.y += y;
+            self.z += z;
+        }
+
+        pub fn plusEqV(self: *Self, vec: Self) void {
+            self.plusEq(vec.x, vec.y, vec.z);
+        }
+
+        pub fn subEq(self: *Self, x: T, y: T, z: T) void {
+            self.x -= x;
+            self.y -= y;
+            self.z -= z;
+        }
+
+        pub fn subEqV(self: *Self, vec: Self) void {
+            self.subEq(vec.x, vec.y, vec.z);
+        }
+
+        pub fn divEq(self: *Self, x: T, y: T, z: T) void {
+            if (comptime @typeInfo(T) == .float) {
+                self.x /= x;
+                self.y /= y;
+                self.z /= z;
+            } else {
+                self.x = @divTrunc(self.x, x);
+                self.y = @divTrunc(self.y, y);
+                self.z = @divTrunc(self.z, z);
+            }
+        }
+
+        pub fn divEqV(self: *Self, vec: Self) void {
+            self.divEq(vec.x, vec.y, vec.z);
+        }
+
+        pub fn normalize(self: *const Self) Self {
+            const scale = 1 / self.len();
+            return .{
+                .x = self.x * scale,
+                .y = self.y * scale,
+                .z = self.z * scale,
+            };
+        }
+
+        pub fn normalizeEq(self: *Self) void {
+            const scale = 1 / self.len();
+            self.x *= scale;
+            self.y *= scale;
+            self.z *= scale;
+        }
+
         /// Calculates and returns the cross product of this vector and another vector `right`.
         pub fn cross(self: *const Self, right: Self) Self {
             return .{
@@ -105,6 +157,14 @@ pub fn Vec3(comptime T: type) type {
                 .y = self.z * right.x - self.x * right.z,
                 .z = self.x * right.y - self.y * right.x,
             };
+        }
+
+        pub fn dist(self: *const Self, vec: Self) Self {
+            const res = ((vec.x - self.x) * (vec.x - self.x)) + ((vec.y - self.y) * (vec.y - self.y)) + ((vec.z - self.z) * (vec.z - self.z));
+            return if (comptime @typeInfo(T) == .float)
+                @sqrt(res)
+            else
+                @intCast(std.math.sqrt(@abs(res)));
         }
     };
 }

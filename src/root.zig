@@ -31,3 +31,10 @@ pub const Vec4i = Vec4(i32);
 pub const Vec4l = Vec4(i64);
 pub const Vec4f = Vec4(f32);
 pub const Vec4d = Vec4(f64);
+
+const mat4 = @import("mat4.zig");
+
+pub const Mat4 = mat4.Mat4;
+
+pub const Mat4f = Mat4(f32);
+pub const Mat4d = Mat4(f64);

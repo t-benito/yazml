@@ -3,6 +3,8 @@ const m = @import("root.zig");
 
 pub fn Mat4(comptime T: type) type {
     const Vec4 = m.Vec4(T);
+    const Vec3 = m.Vec3(T);
+
     return struct {
         const Self = @This();
 
@@ -72,6 +74,49 @@ pub fn Mat4(comptime T: type) type {
                 Vec4.init(0, y, b, 0), // y row
                 Vec4.init(0, 0, c, d), // z row
                 Vec4.init(0, 0, -1, 0), // w row
+            );
+        }
+
+        pub fn createOrthographic(width: f32, height: f32, depthNear: f32, depthFar: f32) Self {
+            const left = -width / 2;
+            const right = width / 2;
+            const btm = -height / 2;
+            const top = height / 2;
+
+            const invRl = 1.0 / (right - left);
+            const invTb = 1.0 / (top - btm);
+            const invFn = 1.0 / (depthFar - depthNear);
+
+            return Self.init(
+                Vec4.init(2.0 * invRl, 0.0, 0.0, 0.0),
+                Vec4.init(0.0, 2.0 * invTb, 0.0, 0.0),
+                Vec4.init(0.0, 0.0, -2.0 * invFn, 0.0),
+                Vec4.init(
+                    -(right + left) * invRl,
+                    -(top + btm) * invTb,
+                    -(depthFar + depthNear) * invFn,
+                    1.0,
+                ),
+            );
+        }
+
+        /// Calculates and returns a view matrix at `eye`, looking at `target`.
+        /// If you are using OpenGL, you must set `transpose` to `false`.
+        pub fn lookAt(eye: Vec3, target: Vec3, up: Vec3) Self {
+            const z = eye.sub(target).normalize();
+            const x = up.cross(z).normalize();
+            const y = z.cross(x).normalize();
+
+            return Self.init(
+                Vec4.init(x.x, y.x, z.x, 0.0),
+                Vec4.init(x.y, y.y, z.y, 0.0),
+                Vec4.init(x.z, y.z, z.z, 0.0),
+                Vec4.init(
+                    -((x.x * eye.x) + (x.y * eye.y) + (x.z * eye.z)),
+                    -((y.x * eye.x) + (y.y * eye.y) + (y.z * eye.z)),
+                    -((z.x * eye.x) + (z.y * eye.y) + (z.z * eye.z)),
+                    1.0,
+                ),
             );
         }
     };

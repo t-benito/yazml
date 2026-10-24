@@ -117,5 +117,21 @@ pub fn Vec4(comptime T: type) type {
         pub fn mulV(self: *const Self, vec: Self) Self {
             return self.mul(vec.x, vec.y, vec.z, vec.w);
         }
+
+        pub fn abs(self: *const Self) Self {
+            return .{
+                .x = @abs(self.x),
+                .y = @abs(self.y),
+                .z = @abs(self.z),
+                .w = @abs(self.w),
+            };
+        }
+
+        pub fn absEq(self: *Self) void {
+            self.x = @abs(self.x);
+            self.y = @abs(self.y);
+            self.z = @abs(self.z);
+            self.w = @abs(self.w);
+        }
     };
 }

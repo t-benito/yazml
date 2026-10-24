@@ -137,7 +137,7 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new normalized `Vec2` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
-            const scale = 1 / self.length();
+            const scale = 1 / self.len();
             return .{
                 .x = self.x * scale,
                 .y = self.y * scale,
