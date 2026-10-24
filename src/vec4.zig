@@ -133,5 +133,23 @@ pub fn Vec4(comptime T: type) type {
             self.z = @abs(self.z);
             self.w = @abs(self.w);
         }
+
+        pub fn normalize(self: *const Self) Self {
+            const scale = 1.0 / self.len();
+            return .{
+                .x = self.x * scale,
+                .y = self.y * scale,
+                .z = self.z * scale,
+                .w = self.w * scale,
+            };
+        }
+
+        pub fn normalizeEq(self: *Self) void {
+            const scale = 1.0 / self.len();
+            self.x *= scale;
+            self.y *= scale;
+            self.z *= scale;
+            self.w *= scale;
+        }
     };
 }

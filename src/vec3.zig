@@ -38,6 +38,7 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Calculates and returns the squared magnitude (length) of the vector.
+        /// This is typically faster than the `len()` function, as it doesnt use `@sqrt`.
         pub fn lenSqr(self: *const Self) T {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z);
         }
@@ -159,6 +160,7 @@ pub fn Vec3(comptime T: type) type {
             };
         }
 
+        /// Calculates and returns the distance of this vector and another vector `vec`.
         pub fn dist(self: *const Self, vec: Self) Self {
             const res = ((vec.x - self.x) * (vec.x - self.x)) + ((vec.y - self.y) * (vec.y - self.y)) + ((vec.z - self.z) * (vec.z - self.z));
             return if (comptime @typeInfo(T) == .float)
