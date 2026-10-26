@@ -40,6 +40,22 @@ pub fn Vec2(comptime T: type) type {
             return (self.x * self.x) + (self.y * self.y);
         }
 
+        // Returns the perpendicular vector on the right side of this vector.
+        pub fn perpRight(self: *const Self) Self {
+            return Self.init(
+                self.y,
+                -self.x,
+            );
+        }
+        
+        // Returns the perpendicular vector on the left side of this vector.
+        pub fn perpLeft(self: *const Self) Self {
+            return Self.init(
+                -self.y,
+                self.x,
+            );
+        }
+
         /// Returns a new `Vec2` resulting from adding `x` and `y` to this vector.
         pub fn add(self: *const Self, x: T, y: T) Self {
             return .{
@@ -164,6 +180,25 @@ pub fn Vec2(comptime T: type) type {
             const scale = 1 / self.length();
             self.x *= scale;
             self.y *= scale;
+        }
+
+        // Returns a new `Vec2` with the rounded values of each component.
+        // Use this only if the type of this vector is a float.
+        pub fn round(self: *const Self) Self {
+            comptime std.debug.assert(@typeInfo(T) == .float);
+            return Self.init(
+                @round(self.x),
+                @round(self.y),
+            );
+        }
+        
+        // Replaces each component of this vector with its rounded value in-place.
+        // Use this only if the type of this vector is a float.
+        // If you want to get a new vector without modifying this one, use `round()` instead.
+        pub fn roundEq(self: *Self) Self {
+            comptime std.debug.assert(@typeInfo(T) == .float);
+            self.x = @round(self.x);
+            self.y = @round(self.y);
         }
 
         /// Returns a new `Vec2` with the absolute values of each component.
