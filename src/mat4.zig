@@ -10,6 +10,7 @@ pub fn Mat4(comptime T: type) type {
 
         cols: [4]Vec4,
 
+        // TODO: what could i possibly put here as the documneation?
         pub const ZERO = Self.init(Vec4.ZERO, Vec4.ZERO, Vec4.ZERO, Vec4.ZERO);
 
         /// Returns a new `Mat4` with the given columns.
