@@ -182,8 +182,8 @@ pub fn Vec2(comptime T: type) type {
             self.y *= scale;
         }
 
-        // Returns a new `Vec2` with the rounded values of each component.
-        // Use this only if the type of this vector is a float.
+        /// Returns a new `Vec2` with the rounded values of each component.
+        /// Use this only if the type of this vector is a float.
         pub fn round(self: *const Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
             return Self.init(
@@ -192,9 +192,9 @@ pub fn Vec2(comptime T: type) type {
             );
         }
         
-        // Replaces each component of this vector with its rounded value in-place.
-        // Use this only if the type of this vector is a float.
-        // If you want to get a new vector without modifying this one, use `round()` instead.
+        /// Replaces each component of this vector with its rounded value in-place.
+        /// Use this only if the type of this vector is a float.
+        /// If you want to get a new vector without modifying this one, use `round()` instead.
         pub fn roundEq(self: *Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
             self.x = @round(self.x);

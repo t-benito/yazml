@@ -155,5 +155,28 @@ pub fn Vec4(comptime T: type) type {
             self.z = @abs(self.z);
             self.w = @abs(self.w);
         }
+
+        /// Returns a new `Vec4` with the rounded values of each component.
+        /// Use this only if the type of this vector is a float.
+        pub fn round(self: *const Self) Self {
+            comptime std.debug.assert(@typeInfo(T) == .float);
+            return Self.init(
+                @round(self.x),
+                @round(self.y),
+                @round(self.z),
+                @round(self.w),
+            );
+        }
+
+        /// Replaces each component of this vector with its rounded value in-place.
+        /// Use this only if the type of this vector is a float.
+        /// If you want to get a new vector without modifying this one, use `round()` instead.
+        pub fn roundEq(self: *Self) void {
+            comptime std.debug.assert(@typeInfo(T) == .float);
+            self.x = @round(self.x);
+            self.y = @round(self.y);
+            self.z = @round(self.z);
+            self.w = @round(self.w);
+        }
     };
 }

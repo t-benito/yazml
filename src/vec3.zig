@@ -45,11 +45,11 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from adding `x`, `y`, and `z` to this vector.
         pub fn add(self: *const Self, x: T, y: T, z: T) Self {
-            return .{
-                .x = self.x + x,
-                .y = self.y + y,
-                .z = self.z + z,
-            };
+            return Self.init(
+                self.x + x,
+                self.y + y,
+                self.z + z,
+            );
         }
 
         /// Returns a new `Vec3` resulting from component-wise addition of `vec`.
@@ -59,11 +59,11 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from subtracting `x`, `y`, and `z` from this vector.
         pub fn sub(self: *const Self, x: T, y: T, z: T) Self {
-            return .{
-                .x = self.x - x,
-                .y = self.y - y,
-                .z = self.z - z,
-            };
+            return Self.init(
+                self.x - x,
+                self.y - y,
+                self.z - z,
+            );
         }
 
         /// Returns a new `Vec3` resulting from component-wise subtraction of `vec`.
@@ -73,11 +73,11 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from dividing this vector's components by `x`, `y`, and `z`.
         pub fn div(self: *const Self, x: T, y: T, z: T) Self {
-            return .{
-                .x = self.x / x,
-                .y = self.y / y,
-                .z = self.z / z,
-            };
+            return Self.init(
+                self.x / x,
+                self.y / y,
+                self.z / z,
+            );
         }
 
         /// Returns a new `Vec3` resulting from component-wise division by `vec`.
@@ -87,11 +87,11 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from multiplying this vector's components by `x`, `y`, and `z`.
         pub fn mul(self: *const Self, x: T, y: T, z: T) Self {
-            return .{
-                .x = self.x * x,
-                .y = self.y * y,
-                .z = self.z * z,
-            };
+            return Self.init(
+                self.x * x,
+                self.y * y,
+                self.z * z,
+            );
         }
 
         /// Returns a new `Vec3` resulting from component-wise multiplication by `vec`.
@@ -164,11 +164,11 @@ pub fn Vec3(comptime T: type) type {
         /// Returns a new normalized `Vec3` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
             const scale = 1 / self.len();
-            return .{
-                .x = self.x * scale,
-                .y = self.y * scale,
-                .z = self.z * scale,
-            };
+            return Self.init(
+                self.x * scale,
+                self.y * scale,
+                self.z * scale,
+            );
         }
 
         /// Normalizes this `Vec3` to unit length (1) in-place.
@@ -180,13 +180,34 @@ pub fn Vec3(comptime T: type) type {
             self.z *= scale;
         }
 
+        /// Returns a new `Vec3` with the rounded values of each component.
+        /// Use this only if the vector type is a float.
+        pub fn round(self: *const Self) Self {
+            comptime std.debug.assert(@typeInfo(T) == .float);
+            return Self.init(
+                @round(self.x),
+                @round(self.y),
+                @round(self.z),
+            );
+        }
+
+        /// Replaces each component of this vector with its rounded value in-place.
+        /// Use this only if the type of this vector is a float.
+        /// If you want to get a new vector without modifying this one, use `round()` instead.
+        pub fn roundEq(self: *Self) Self {
+            comptime std.debug.assert(@typeInfo(T) == .float);
+            self.x = @round(self.x);
+            self.y = @round(self.y);
+            self.z = @round(self.z);
+        }
+
         /// Returns the cross product of this vector and `right`.
         pub fn cross(self: *const Self, right: Self) Self {
-            return .{
-                .x = self.y * right.z - self.z * right.y,
-                .y = self.z * right.x - self.x * right.z,
-                .z = self.x * right.y - self.y * right.x,
-            };
+            return Self.init(
+                self.y * right.z - self.z * right.y,
+                self.z * right.x - self.x * right.z,
+                self.x * right.y - self.y * right.x,
+            );
         }
 
         /// Returns the Euclidean distance between this point and `vec`.
