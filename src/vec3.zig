@@ -210,8 +210,17 @@ pub fn Vec3(comptime T: type) type {
             );
         }
 
+        /// Returns the Euclidian distance between this point and `x`, `y` and `z`.
+        pub fn dist(self: *const Self, x: T, y: T, z: T) T {
+            const res = ((x - self.x) * (x - self.x)) + ((y - self.y) * (y - self.y)) + ((z - self.z) * (z - self.z));
+            return if (comptime @typeInfo(T) == .float)
+                @sqrt(res)
+            else
+                @intCast(std.math.sqrt(@abs(res)));
+        }
+
         /// Returns the Euclidean distance between this point and `vec`.
-        pub fn dist(self: *const Self, vec: Self) Self {
+        pub fn distV(self: *const Self, vec: Self) T {
             const res = ((vec.x - self.x) * (vec.x - self.x)) + ((vec.y - self.y) * (vec.y - self.y)) + ((vec.z - self.z) * (vec.z - self.z));
             return if (comptime @typeInfo(T) == .float)
                 @sqrt(res)

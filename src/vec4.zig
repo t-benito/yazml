@@ -178,5 +178,30 @@ pub fn Vec4(comptime T: type) type {
             self.z = @round(self.z);
             self.w = @round(self.w);
         }
+        
+        // TODO: do i even need these?
+        /// Returns the Euclidian distance between this point and `x`, `y`, `z` and `w`.
+        pub fn dist(self: *const Self, x: T, y: T, z: T, w: T) T {
+            const res = ((x - self.x) * (x - self.x)) + 
+                ((y - self.y) * (y - self.y)) + 
+                ((z - self.z) * (z - self.z)) +
+                ((w - self.w) * (w - self.w));
+            return if (comptime @typeInfo(T) == .float)
+                @sqrt(res)
+            else
+                @intCast(std.math.sqrt(@abs(res)));
+        }
+
+        /// Returns the Euclidian distance between this point and `vec`.
+        pub fn distV(self: *const Self, vec: Self) T {
+            const res = ((vec.x - self.x) * (vec.x - self.x)) + 
+                ((vec.y - self.y) * (vec.y - self.y)) + 
+                ((vec.z - self.z) * (vec.z - self.z)) +
+                ((vec.w - self.w) * (vec.w - self.w));
+            return if (comptime @typeInfo(T) == .float)
+                @sqrt(res)
+            else
+                @intCast(std.math.sqrt(@abs(res)));
+        }
     };
 }
