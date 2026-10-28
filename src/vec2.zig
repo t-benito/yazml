@@ -228,11 +228,19 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns the Euclidean distance between this point and `vec`.
         pub fn distV(self: *const Self, vec: Self) T {
-            const res = ((vec.x - self.x) * (vec.x - self.x)) + ((vec.y - self.y) * (vec.y - self.y));
-            return if (comptime @typeInfo(T) == .float)
-                @sqrt(res)
-            else
-                @intCast(std.math.sqrt(@abs(res)));
+            return self.dist(vec.x, vec.y);
+        }
+
+        /// Returns the squared Euclidian distance between this point and `x` and `y`.
+        /// This is typically faster than using `dist()` as it does not use `@sqrt()`.
+        pub fn distSqr(self: *const Self, x: T, y: T) T {
+            return ((x - self.x) * (x - self.x)) + ((y - self.y) * (y - self.y));
+        }
+
+        /// Returns the squared Euclidian distance between this point and `vec`.
+        /// This is typically faster than using `dist()` as it does not use `@sqrt()`.
+        pub fn distSqrV(self: *const Self, vec: Self) {
+            return self.distSqr(vec.x, vec.y);
         }
 
         /// Returns the dot (scalar) product of this vector and `left`.
