@@ -239,7 +239,7 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns the squared Euclidian distance between this point and `vec`.
         /// This is typically faster than using `dist()` as it does not use `@sqrt()`.
-        pub fn distSqrV(self: *const Self, vec: Self) {
+        pub fn distSqrV(self: *const Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y);
         }
 
