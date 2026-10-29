@@ -1,3 +1,5 @@
+// Copyright (c) 2026 benito. Licensed under the MIT license.
+
 const std = @import("std");
 const m = @import("root.zig");
 

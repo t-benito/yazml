@@ -1,3 +1,5 @@
+// Copyright (c) 2026 benito. Licensed under the MIT license.
+
 pub fn VecB(comptime len: usize) type {
     return struct {
         const Self = @This();

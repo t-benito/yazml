@@ -1,3 +1,5 @@
+// Copyright (c) 2026 benito. Licensed under the MIT license.
+
 const std = @import("std");
 
 /// A generic 4D vector struct parameterized by numerical type `T`.
@@ -178,11 +180,11 @@ pub fn Vec4(comptime T: type) type {
             self.z = @round(self.z);
             self.w = @round(self.w);
         }
-        
+
         /// Returns the Euclidian distance between this point and `x`, `y`, `z` and `w`.
         pub fn dist(self: *const Self, x: T, y: T, z: T, w: T) T {
-            const res = ((x - self.x) * (x - self.x)) + 
-                ((y - self.y) * (y - self.y)) + 
+            const res = ((x - self.x) * (x - self.x)) +
+                ((y - self.y) * (y - self.y)) +
                 ((z - self.z) * (z - self.z)) +
                 ((w - self.w) * (w - self.w));
             return if (comptime @typeInfo(T) == .float)
@@ -198,16 +200,16 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns the squared Euclidian distance between this point and `x`, `y`, `z` and `w`.
         /// This is typically faster than `dist()` as it does not use `@sqrt()`.
-        pub fn distSqr(self: *const Self, x: T, y: T, z: T, w:T) T {
-            return ((x - self.x) * (x - self.x)) + 
-                ((y - self.y) * (y - self.y)) + 
+        pub fn distSqr(self: *const Self, x: T, y: T, z: T, w: T) T {
+            return ((x - self.x) * (x - self.x)) +
+                ((y - self.y) * (y - self.y)) +
                 ((z - self.z) * (z - self.z)) +
                 ((w - self.w) * (w - self.w));
         }
 
         /// Returns the squared Euclidian distance between this point and `vec`.
         /// This is typically faster than `dist()` as it does not use `@sqrt()`.
-        pub fn distSqrV(self: *const Self, vec: Self) T  {
+        pub fn distSqrV(self: *const Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y, vec.z, vec.w);
         }
     };

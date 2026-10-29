@@ -1,3 +1,5 @@
+// Copyright (c) 2026 benito. Licensed under the MIT license.
+
 const std = @import("std");
 
 /// A generic 2D vector struct parameterized by numerical type `T`.
@@ -47,7 +49,7 @@ pub fn Vec2(comptime T: type) type {
                 -self.x,
             );
         }
-        
+
         // Returns the perpendicular vector on the left side of this vector.
         pub fn perpLeft(self: *const Self) Self {
             return Self.init(
@@ -191,7 +193,7 @@ pub fn Vec2(comptime T: type) type {
                 @round(self.y),
             );
         }
-        
+
         /// Replaces each component of this vector with its rounded value in-place.
         /// Use this only if the type of this vector is a float.
         /// If you want to get a new vector without modifying this one, use `round()` instead.
@@ -224,7 +226,6 @@ pub fn Vec2(comptime T: type) type {
             else
                 @intCast(std.math.sqrt(@abs(res)));
         }
-
 
         /// Returns the Euclidean distance between this point and `vec`.
         pub fn distV(self: *const Self, vec: Self) T {

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 benito. Licensed under the MIT license.
+
 pub const Vec2 = @import("vec2.zig").Vec2;
 
 /// 32-bit integer `Vec2`
