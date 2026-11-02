@@ -107,12 +107,12 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new `Vec4` resulting from multiplying this vector's components by scalar values `x`, `y`, `z` and `w`.
         pub fn mul(self: *const Self, x: T, y: T, z: T, w: T) Self {
-            return .{
-                .x = self.x * x,
-                .y = self.y * y,
-                .z = self.z * z,
-                .w = self.w * w,
-            };
+            return .init(
+                self.x * x,
+                self.y * y,
+                self.z * z,
+                self.w * w,
+            );
         }
 
         /// Returns a new `Vec4` resulting from component-wise multiplication by another vector `vec`.
@@ -122,32 +122,32 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new normalized `Vec4` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
-            const scale = 1.0 / self.len();
-            return .{
-                .x = self.x * scale,
-                .y = self.y * scale,
-                .z = self.z * scale,
-                .w = self.w * scale,
-            };
+            const scalee = 1.0 / self.len();
+            return .init(
+                self.x * scalee,
+                self.y * scalee,
+                self.z * scalee,
+                self.w * scalee,
+            );
         }
 
         /// Returns a new normalized `Vec4` scaled to unit length (1).
         pub fn normalizeEq(self: *Self) void {
-            const scale = 1.0 / self.len();
-            self.x *= scale;
-            self.y *= scale;
-            self.z *= scale;
-            self.w *= scale;
+            const scalee = 1.0 / self.len();
+            self.x *= scalee;
+            self.y *= scalee;
+            self.z *= scalee;
+            self.w *= scalee;
         }
 
         /// Returns a new `Vec4` with the absolute values of each component.
         pub fn abs(self: *const Self) Self {
-            return .{
-                .x = @abs(self.x),
-                .y = @abs(self.y),
-                .z = @abs(self.z),
-                .w = @abs(self.w),
-            };
+            return .init(
+                @abs(self.x),
+                @abs(self.y),
+                @abs(self.z),
+                @abs(self.w),
+            );
         }
 
         /// Replaces each component of this vector with its absolute value in-place.
@@ -162,7 +162,7 @@ pub fn Vec4(comptime T: type) type {
         /// Use this only if the type of this vector is a float.
         pub fn round(self: *const Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
-            return Self.init(
+            return .init(
                 @round(self.x),
                 @round(self.y),
                 @round(self.z),

@@ -13,9 +13,9 @@ pub fn Vec2(comptime T: type) type {
         y: T,
 
         /// Zero vector `(0, 0)`.
-        pub const ZERO = Self.init(0, 0);
+        pub const ZERO = init(0, 0);
         /// Up unit vector `(0, 1)`.
-        pub const UP = Self.init(0, 1);
+        pub const UP = init(0, 1);
 
         /// Returns a new 2D vector with the given `x` and `y` coordinates.
         pub fn init(x: T, y: T) Self {
@@ -44,7 +44,7 @@ pub fn Vec2(comptime T: type) type {
 
         // Returns the perpendicular vector on the right side of this vector.
         pub fn perpRight(self: *const Self) Self {
-            return Self.init(
+            return init(
                 self.y,
                 -self.x,
             );
@@ -52,7 +52,7 @@ pub fn Vec2(comptime T: type) type {
 
         // Returns the perpendicular vector on the left side of this vector.
         pub fn perpLeft(self: *const Self) Self {
-            return Self.init(
+            return init(
                 -self.y,
                 self.x,
             );
@@ -60,10 +60,10 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` resulting from adding `x` and `y` to this vector.
         pub fn add(self: *const Self, x: T, y: T) Self {
-            return .{
-                .x = self.x + x,
-                .y = self.y + y,
-            };
+            return init(
+                self.x + x,
+                self.y + y,
+            );
         }
 
         /// Returns a new `Vec2` resulting from component-wise addition of `vec`.
@@ -73,10 +73,10 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` resulting from subtracting `x` and `y` from this vector.
         pub fn sub(self: *const Self, x: T, y: T) Self {
-            return .{
-                .x = self.x - x,
-                .y = self.y - y,
-            };
+            return init(
+                self.x - x,
+                self.y - y,
+            );
         }
 
         /// Returns a new `Vec2` resulting from component-wise subtraction of `vec`.
@@ -87,13 +87,13 @@ pub fn Vec2(comptime T: type) type {
         /// Returns a new `Vec2` resulting from dividing this vector's components by `x` and `y`.
         /// When the vector contains an integer type, this performs truncating division.
         pub fn div(self: *const Self, x: T, y: T) Self {
-            return if (comptime @typeInfo(T) == .int) .{
-                .x = @divTrunc(self.x, x),
-                .y = @divTrunc(self.y, y),
-            } else .{
-                .x = self.x / x,
-                .y = self.y / y,
-            };
+            return if (comptime @typeInfo(T) == .int) init(
+                @divTrunc(self.x, x),
+                @divTrunc(self.y, y),
+            ) else init(
+                self.x / x,
+                self.y / y,
+            );
         }
 
         /// Returns a new `Vec2` resulting from component-wise division by `vec`.
@@ -104,10 +104,10 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` resulting from multiplying this vector's components by `x` and `y`.
         pub fn mul(self: *const Self, x: T, y: T) Self {
-            return .{
-                .x = self.x * x,
-                .y = self.y * y,
-            };
+            return init(
+                self.x * x,
+                self.y * y,
+            );
         }
 
         /// Returns a new `Vec2` result from component-wise multiplication by `vec`.
@@ -170,10 +170,10 @@ pub fn Vec2(comptime T: type) type {
         /// Returns a new normalized `Vec2` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
             const scale = 1 / self.len();
-            return .{
-                .x = self.x * scale,
-                .y = self.y * scale,
-            };
+            return init(
+                self.x * scale,
+                self.y * scale,
+            );
         }
 
         /// Normalizes this `Vec2` to unit length (1) in-place.
@@ -188,7 +188,7 @@ pub fn Vec2(comptime T: type) type {
         /// Use this only if the type of this vector is a float.
         pub fn round(self: *const Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
-            return Self.init(
+            return init(
                 @round(self.x),
                 @round(self.y),
             );

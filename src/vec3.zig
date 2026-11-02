@@ -15,11 +15,11 @@ pub fn Vec3(comptime T: type) type {
         z: T,
 
         /// Zero vector `(0, 0, 0)`.
-        pub const ZERO = Self.init(0, 0, 0);
+        pub const ZERO = init(0, 0, 0);
         /// One vector `(1, 1, 1)`.
-        pub const ONE = Self.init(1, 1, 1);
+        pub const ONE = init(1, 1, 1);
         /// Up unit vector `(0, 1, 0)`.
-        pub const UP = Self.init(0, 1, 0);
+        pub const UP = init(0, 1, 0);
 
         /// Returns a new 3D vector with the given `x`, `y`, and `z` coordinates.
         pub fn init(x: T, y: T, z: T) Self {
@@ -47,7 +47,7 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from adding `x`, `y`, and `z` to this vector.
         pub fn add(self: *const Self, x: T, y: T, z: T) Self {
-            return Self.init(
+            return init(
                 self.x + x,
                 self.y + y,
                 self.z + z,
@@ -61,7 +61,7 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from subtracting `x`, `y`, and `z` from this vector.
         pub fn sub(self: *const Self, x: T, y: T, z: T) Self {
-            return Self.init(
+            return init(
                 self.x - x,
                 self.y - y,
                 self.z - z,
@@ -75,7 +75,7 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from dividing this vector's components by `x`, `y`, and `z`.
         pub fn div(self: *const Self, x: T, y: T, z: T) Self {
-            return Self.init(
+            return init(
                 self.x / x,
                 self.y / y,
                 self.z / z,
@@ -89,7 +89,7 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from multiplying this vector's components by `x`, `y`, and `z`.
         pub fn mul(self: *const Self, x: T, y: T, z: T) Self {
-            return Self.init(
+            return init(
                 self.x * x,
                 self.y * y,
                 self.z * z,
@@ -166,7 +166,7 @@ pub fn Vec3(comptime T: type) type {
         /// Returns a new normalized `Vec3` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
             const scale = 1 / self.len();
-            return Self.init(
+            return init(
                 self.x * scale,
                 self.y * scale,
                 self.z * scale,
@@ -186,7 +186,7 @@ pub fn Vec3(comptime T: type) type {
         /// Use this only if the vector type is a float.
         pub fn round(self: *const Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
-            return Self.init(
+            return init(
                 @round(self.x),
                 @round(self.y),
                 @round(self.z),
@@ -205,7 +205,7 @@ pub fn Vec3(comptime T: type) type {
 
         /// Returns the cross product of this vector and `right`.
         pub fn cross(self: *const Self, right: Self) Self {
-            return Self.init(
+            return init(
                 self.y * right.z - self.z * right.y,
                 self.z * right.x - self.x * right.z,
                 self.x * right.y - self.y * right.x,

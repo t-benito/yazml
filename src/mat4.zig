@@ -13,7 +13,14 @@ pub fn Mat4(comptime T: type) type {
         cols: [4]Vec4,
 
         // TODO: documntation
-        pub const ZERO = Self.init(Vec4.ZERO, Vec4.ZERO, Vec4.ZERO, Vec4.ZERO);
+        pub const ZERO = .init(.ZERO, .ZERO, .ZERO, .ZERO);
+
+        pub const IDENTITY = Self.init(
+            .init(1, 0, 0, 0),
+            .init(0, 1, 0, 0),
+            .init(0, 0, 1, 0),
+            .init(0, 0, 0, 1),
+        );
 
         /// Returns a new `Mat4` with the given columns.
         pub fn init(col0: Vec4, col1: Vec4, col2: Vec4, col3: Vec4) Self {
@@ -22,9 +29,18 @@ pub fn Mat4(comptime T: type) type {
             };
         }
 
+        pub fn fromDiag(vec: Vec4) Self {
+            return init(
+                .init(vec.x, 0, 0, 0),
+                .init(0, vec.y, 0, 0),
+                .init(0, 0, vec.z, 0),
+                .init(0, 0, 0, vec.w),
+            );
+        }
+
         /// Returns a copy of the first row of this matrix.
         pub fn row0(self: *const Self) Vec4 {
-            return Vec4.init(
+            return .init(
                 self.cols[0].x,
                 self.cols[1].x,
                 self.cols[2].x,
@@ -34,7 +50,7 @@ pub fn Mat4(comptime T: type) type {
 
         /// Returns a copy of the second row of this matrix.
         pub fn row1(self: *const Self) Vec4 {
-            return Vec4.init(
+            return .init(
                 self.cols[0].y,
                 self.cols[1].y,
                 self.cols[2].y,
@@ -44,7 +60,7 @@ pub fn Mat4(comptime T: type) type {
 
         /// Returns a copy of the third row of this matrix.
         pub fn row2(self: *const Self) Vec4 {
-            return Vec4.init(
+            return .init(
                 self.cols[0].z,
                 self.cols[1].z,
                 self.cols[2].z,
@@ -54,7 +70,7 @@ pub fn Mat4(comptime T: type) type {
 
         /// Returns a copy of the fourth row of this matrix.
         pub fn row3(self: *const Self) Vec4 {
-            return Vec4.init(
+            return .init(
                 self.cols[0].w,
                 self.cols[1].w,
                 self.cols[2].w,
@@ -78,11 +94,11 @@ pub fn Mat4(comptime T: type) type {
             const c = -(depthFar + depthNear) / (depthFar - depthNear);
             const d = -(2.0 * depthFar * depthNear) / (depthFar - depthNear);
 
-            return Self.init(
-                Vec4.init(x, 0, a, 0), // x row
-                Vec4.init(0, y, b, 0), // y row
-                Vec4.init(0, 0, c, d), // z row
-                Vec4.init(0, 0, -1, 0), // w row
+            return init(
+                .init(x, 0, a, 0), // x row
+                .init(0, y, b, 0), // y row
+                .init(0, 0, c, d), // z row
+                .init(0, 0, -1, 0), // w row
             );
         }
 
@@ -97,11 +113,11 @@ pub fn Mat4(comptime T: type) type {
             const invTb = 1.0 / (top - btm);
             const invFn = 1.0 / (depthFar - depthNear);
 
-            return Self.init(
-                Vec4.init(2.0 * invRl, 0.0, 0.0, 0.0),
-                Vec4.init(0.0, 2.0 * invTb, 0.0, 0.0),
-                Vec4.init(0.0, 0.0, -2.0 * invFn, 0.0),
-                Vec4.init(
+            return init(
+                .init(2.0 * invRl, 0.0, 0.0, 0.0),
+                .init(0.0, 2.0 * invTb, 0.0, 0.0),
+                .init(0.0, 0.0, -2.0 * invFn, 0.0),
+                .init(
                     -(right + left) * invRl,
                     -(top + btm) * invTb,
                     -(depthFar + depthNear) * invFn,
@@ -117,16 +133,39 @@ pub fn Mat4(comptime T: type) type {
             const x = up.cross(z).normalize();
             const y = z.cross(x).normalize();
 
-            return Self.init(
-                Vec4.init(x.x, y.x, z.x, 0.0),
-                Vec4.init(x.y, y.y, z.y, 0.0),
-                Vec4.init(x.z, y.z, z.z, 0.0),
-                Vec4.init(
+            return init(
+                .init(x.x, y.x, z.x, 0.0),
+                .init(x.y, y.y, z.y, 0.0),
+                .init(x.z, y.z, z.z, 0.0),
+                .init(
                     -((x.x * eye.x) + (x.y * eye.y) + (x.z * eye.z)),
                     -((y.x * eye.x) + (y.y * eye.y) + (y.z * eye.z)),
                     -((z.x * eye.x) + (z.y * eye.y) + (z.z * eye.z)),
                     1.0,
                 ),
+            );
+        }
+
+        /// Returns a new matrix ... (TODO)
+        pub fn mul(self: *const Self, other: Self) Self {
+            return init(
+                // geez
+                self.cols[0].mul(other.cols[0].x)
+                    .add(self.cols[1].mul(other.cols[0].y))
+                    .add(self.cols[2].mul(other.cols[0].z))
+                    .add(self.cols[3].mul(other.cols[0].w)),
+                self.cols[0].mul(other.cols[1].x)
+                    .add(self.cols[1].mul(other.cols[1].y))
+                    .add(self.cols[2].mul(other.cols[1].z))
+                    .add(self.cols[3].mul(other.cols[1].w)),
+                self.cols[0].mul(other.cols[2].x)
+                    .add(self.cols[1].mul(other.cols[2].y))
+                    .add(self.cols[2].mul(other.cols[2].z))
+                    .add(self.cols[3].mul(other.cols[2].w)),
+                self.cols[0].mul(other.cols[3].x)
+                    .add(self.cols[1].mul(other.cols[3].y))
+                    .add(self.cols[2].mul(other.cols[3].z))
+                    .add(self.cols[3].mul(other.cols[3].w)),
             );
         }
     };
