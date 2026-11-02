@@ -17,17 +17,17 @@ pub fn Vec4(comptime T: type) type {
         w: T,
 
         /// `(1, 0, 0, 0)`
-        pub const UNIT_X = Self.init(1, 0, 0, 0);
+        pub const UNIT_X = init(1, 0, 0, 0);
         /// `(0, 1, 0, 0)`
-        pub const UNIT_Y = Self.init(0, 1, 0, 0);
+        pub const UNIT_Y = init(0, 1, 0, 0);
         /// `(0, 0, 1, 0)`
-        pub const UNIT_Z = Self.init(0, 0, 1, 0);
+        pub const UNIT_Z = init(0, 0, 1, 0);
         /// `(0, 0, 0, 1)`
-        pub const UNIT_W = Self.init(0, 0, 0, 1);
+        pub const UNIT_W = init(0, 0, 0, 1);
         /// Zero vector `(0, 0, 0, 0)`.
-        pub const ZERO = Self.init(0, 0, 0, 0);
+        pub const ZERO = init(0, 0, 0, 0);
         /// One vector `(1, 1, 1, 1)`.
-        pub const ONE = Self.init(1, 1, 1, 1);
+        pub const ONE = init(1, 1, 1, 1);
 
         /// Initializes and returns a new 4D vector with the given `x`, `y`, `z` and `w` coordinates.
         pub fn init(x: T, y: T, z: T, w: T) Self {
@@ -55,12 +55,12 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new `Vec4` resulting from adding scalar components `x`, `y`, `z` and `w` to this vector.
         pub fn add(self: *const Self, x: T, y: T, z: T, w: T) Self {
-            return .{
-                .x = self.x + x,
-                .y = self.y + y,
-                .z = self.z + z,
-                .w = self.w + w,
-            };
+            return init(
+                self.x + x,
+                self.y + y,
+                self.z + z,
+                self.w + w,
+            );
         }
 
         /// Returns a new `Vec3` resulting from component-wise addition of another vector `vec`.
@@ -70,12 +70,12 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new `Vec3` resulting from subtracting scalar components `x`, `y`, `z` and `w` from this vector.
         pub fn sub(self: *const Self, x: T, y: T, z: T, w: T) Self {
-            return .{
-                .x = self.x - x,
-                .y = self.y - y,
-                .z = self.z - z,
-                .w = self.w - w,
-            };
+            return init(
+                self.x - x,
+                self.y - y,
+                self.z - z,
+                self.w - w,
+            );
         }
 
         /// Returns a new `Vec4` resulting from component-wise subtraction of another vector `vec`.
@@ -86,17 +86,17 @@ pub fn Vec4(comptime T: type) type {
         /// Returns a new `Vec4` resulting from dividing this vector's components by scalar values `x`, `y`, `z` and `w`.
         /// When the vector contains an integer type, this function truncating division.
         pub fn div(self: *const Self, x: T, y: T, z: T, w: T) Self {
-            return if (comptime @typeInfo(T) == .float) .{
-                .x = self.x / x,
-                .y = self.y / y,
-                .z = self.z / z,
-                .w = self.w / w,
-            } else .{
-                .x = @divTrunc(self.x, x),
-                .y = @divTrunc(self.y, y),
-                .z = @divTrunc(self.z, z),
-                .w = @divTrunc(self.w, w),
-            };
+            return if (comptime @typeInfo(T) == .float) init(
+                self.x / x,
+                self.y / y,
+                self.z / z,
+                self.w / w,
+            ) else init(
+                @divTrunc(self.x, x),
+                @divTrunc(self.y, y),
+                @divTrunc(self.z, z),
+                @divTrunc(self.w, w),
+            );
         }
 
         /// Returns a new `Vec4` resulting from component-wise division by another vector `vec`.
@@ -107,7 +107,7 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new `Vec4` resulting from multiplying this vector's components by scalar values `x`, `y`, `z` and `w`.
         pub fn mul(self: *const Self, x: T, y: T, z: T, w: T) Self {
-            return .init(
+            return init(
                 self.x * x,
                 self.y * y,
                 self.z * z,
@@ -123,7 +123,7 @@ pub fn Vec4(comptime T: type) type {
         /// Returns a new normalized `Vec4` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
             const scalee = 1.0 / self.len();
-            return .init(
+            return init(
                 self.x * scalee,
                 self.y * scalee,
                 self.z * scalee,
@@ -142,7 +142,7 @@ pub fn Vec4(comptime T: type) type {
 
         /// Returns a new `Vec4` with the absolute values of each component.
         pub fn abs(self: *const Self) Self {
-            return .init(
+            return init(
                 @abs(self.x),
                 @abs(self.y),
                 @abs(self.z),
@@ -162,7 +162,7 @@ pub fn Vec4(comptime T: type) type {
         /// Use this only if the type of this vector is a float.
         pub fn round(self: *const Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
-            return .init(
+            return init(
                 @round(self.x),
                 @round(self.y),
                 @round(self.z),

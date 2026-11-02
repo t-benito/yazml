@@ -13,9 +13,9 @@ pub fn Mat4(comptime T: type) type {
         cols: [4]Vec4,
 
         // TODO: documntation
-        pub const ZERO = .init(.ZERO, .ZERO, .ZERO, .ZERO);
+        pub const ZERO = init(.ZERO, .ZERO, .ZERO, .ZERO);
 
-        pub const IDENTITY = Self.init(
+        pub const IDENTITY = init(
             .init(1, 0, 0, 0),
             .init(0, 1, 0, 0),
             .init(0, 0, 1, 0),
