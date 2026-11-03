@@ -181,6 +181,19 @@ pub fn Vec4(comptime T: type) type {
             self.w = @round(self.w);
         }
 
+        pub fn cross(self: *const Self, x: T, y: T, z: T) Self {
+            return init(
+                self.y * z - self.z * y,
+                self.z * x - self.x * z,
+                self.x * y - self.y * x,
+                0,
+            );
+        }
+
+        pub fn crossV(self: *const Self, right: Self) Self {
+            return self.cross(right.x, right.y, right.z);
+        }
+
         /// Returns the Euclidian distance between this point and `x`, `y`, `z` and `w`.
         pub fn dist(self: *const Self, x: T, y: T, z: T, w: T) T {
             const res = ((x - self.x) * (x - self.x)) +

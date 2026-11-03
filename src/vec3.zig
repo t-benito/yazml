@@ -203,13 +203,18 @@ pub fn Vec3(comptime T: type) type {
             self.z = @round(self.z);
         }
 
-        /// Returns the cross product of this vector and `right`.
-        pub fn cross(self: *const Self, right: Self) Self {
+        /// Returns the cross product of this vector and `x`, `y` and `z`.
+        pub fn cross(self: *const Self, x: T, y: T, z: T) Self {
             return init(
-                self.y * right.z - self.z * right.y,
-                self.z * right.x - self.x * right.z,
-                self.x * right.y - self.y * right.x,
+                self.y * z - self.z * y,
+                self.z * x - self.x * z,
+                self.x * y - self.y * x,
             );
+        }
+
+        /// Returns the cross product of this vector and `right`.
+        pub fn crossV(self: *const Self, right: Self) Self {
+            return self.cross(right.x, right.y, right.z);
         }
 
         /// Returns the Euclidian distance between this point and `x`, `y` and `z`.

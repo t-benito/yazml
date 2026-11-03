@@ -10,7 +10,7 @@ too heavyweight or overly complex to use for my personal liking.
 - [X] Vectors (Vec2, Vec3, Vec4)
 - [ ] Mat4 (IN PROGRESS)
 - [ ] Quaternions
-- [ ] AABBs and Rays
+- [ ] Transforms
 
 ## Installation
 Run this command:

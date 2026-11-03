@@ -27,8 +27,6 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns the magnitude (length) of the vector.
         pub fn len(self: *const Self) T {
-            // TODO: this seems to crash for some reason with a larger size (on integers)
-            // (i tested it only with 300k dont know the exact amount it does)
             const res = (self.x * self.x) + (self.y * self.y);
             return if (comptime @typeInfo(T) == .float)
                 @sqrt(res)
@@ -216,6 +214,19 @@ pub fn Vec2(comptime T: type) type {
         pub fn absEq(self: *Self) void {
             self.x = @abs(self.x);
             self.y = @abs(self.y);
+        }
+
+        /// Returns the cross product of this vector and `x` and `y`.
+        pub fn cross(self: *const Self, x: T, y: T) Self {
+            return init(
+                self.y * x - self.x - y,
+                self.x * y - self.y - x,
+            );
+        }
+
+        /// Returns the cross product of this vector and `right`
+        pub fn crossV(self: *const Self, right: Self) Self {
+            return self.cross(right.x, right.y);
         }
 
         /// Returns the Euclidean distance between this point and `x` and `y`.
