@@ -45,6 +45,11 @@ pub fn Vec3(comptime T: type) type {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z);
         }
 
+        /// Returns this vectors components as an array of `T`.
+        pub fn toArray(self: *const Self) [3]T {
+            return [3]T{ self.x, self.y, self.z };
+        }
+
         /// Returns a new `Vec3` resulting from adding `x`, `y`, and `z` to this vector.
         pub fn add(self: *const Self, x: T, y: T, z: T) Self {
             return init(

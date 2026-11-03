@@ -148,25 +148,14 @@ pub fn Mat4(comptime T: type) type {
 
         /// Returns a new matrix ... (TODO)
         pub fn mul(self: *const Self, other: Self) Self {
-            return init(
-                // geez
-                self.cols[0].mul(other.cols[0].x)
-                    .add(self.cols[1].mul(other.cols[0].y))
-                    .add(self.cols[2].mul(other.cols[0].z))
-                    .add(self.cols[3].mul(other.cols[0].w)),
-                self.cols[0].mul(other.cols[1].x)
-                    .add(self.cols[1].mul(other.cols[1].y))
-                    .add(self.cols[2].mul(other.cols[1].z))
-                    .add(self.cols[3].mul(other.cols[1].w)),
-                self.cols[0].mul(other.cols[2].x)
-                    .add(self.cols[1].mul(other.cols[2].y))
-                    .add(self.cols[2].mul(other.cols[2].z))
-                    .add(self.cols[3].mul(other.cols[2].w)),
-                self.cols[0].mul(other.cols[3].x)
-                    .add(self.cols[1].mul(other.cols[3].y))
-                    .add(self.cols[2].mul(other.cols[3].z))
-                    .add(self.cols[3].mul(other.cols[3].w)),
-            );
+            var res = ZERO;
+            inline for (0..4) |i| {
+                res.cols[i] = self.cols[0].mulS(other.cols[i].x)
+                    .addV(self.cols[1].mulS(other.cols[i].y))
+                    .addV(self.cols[2].mulS(other.cols[i].z))
+                    .addV(self.cols[3].mulS(other.cols[i].w));
+            }
+            return res;
         }
     };
 }

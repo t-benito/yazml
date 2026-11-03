@@ -56,6 +56,11 @@ pub fn Vec2(comptime T: type) type {
             );
         }
 
+        /// Returns this vectors components as an array of `T`.
+        pub fn toArray(self: *const Self) [2]T {
+            return [2]T{ self.x, self.y };
+        }
+
         /// Returns a new `Vec2` resulting from adding `x` and `y` to this vector.
         pub fn add(self: *const Self, x: T, y: T) Self {
             return init(

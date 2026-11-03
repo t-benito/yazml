@@ -29,7 +29,7 @@ pub fn Vec4(comptime T: type) type {
         /// One vector `(1, 1, 1, 1)`.
         pub const ONE = init(1, 1, 1, 1);
 
-        /// Initializes and returns a new 4D vector with the given `x`, `y`, `z` and `w` coordinates.
+        /// Returns a new 4D vector with the given `x`, `y`, `z` and `w` coordinates.
         pub fn init(x: T, y: T, z: T, w: T) Self {
             return .{
                 .x = x,
@@ -39,7 +39,7 @@ pub fn Vec4(comptime T: type) type {
             };
         }
 
-        /// Calculates and returns the magnitude (length) of the vector.
+        /// Returns the magnitude (length) of the vector.
         pub fn len(self: *const Self) T {
             const res = (self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w);
             return if (comptime @typeInfo(T) == .float)
@@ -48,9 +48,14 @@ pub fn Vec4(comptime T: type) type {
                 @intCast(std.math.sqrt(@abs(res)));
         }
 
-        /// Calculates and returns the squared magnitude (length) of the vector.
+        /// Returns the squared magnitude (length) of the vector.
         pub fn lenSqr(self: *const Self) T {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w);
+        }
+
+        /// Returns this vectors components as an array of `T`.
+        pub fn toArray(self: *const Self) [4]T {
+            return [4]T{ self.x, self.y, self.z, self.w };
         }
 
         /// Returns a new `Vec4` resulting from adding scalar components `x`, `y`, `z` and `w` to this vector.
@@ -120,6 +125,18 @@ pub fn Vec4(comptime T: type) type {
             return self.mul(vec.x, vec.y, vec.z, vec.w);
         }
 
+        // TODO: put this method in every vector type and for every type of math thingy
+
+        /// Returns a new `Vec4` resulting from component-wise multiplication by `scalar`.
+        pub fn mulS(self: *const Self, scalar: T) Self {
+            return init(
+                self.x * scalar,
+                self.y * scalar,
+                self.z * scalar,
+                self.w * scalar,
+            );
+        }
+
         /// Returns a new normalized `Vec4` scaled to unit length (1).
         pub fn normalize(self: *const Self) Self {
             const scalee = 1.0 / self.len();
@@ -181,6 +198,8 @@ pub fn Vec4(comptime T: type) type {
             self.w = @round(self.w);
         }
 
+        /// Returns the cross product of this vector and `x`, `y` and `z`.
+        /// The w scalar of the resulting `Vec4` is always 0.
         pub fn cross(self: *const Self, x: T, y: T, z: T) Self {
             return init(
                 self.y * z - self.z * y,
@@ -190,6 +209,8 @@ pub fn Vec4(comptime T: type) type {
             );
         }
 
+        /// Returns the cross product of this vector and `right`.
+        /// The w scalar of the resulting `Vec4` is always 0.
         pub fn crossV(self: *const Self, right: Self) Self {
             return self.cross(right.x, right.y, right.z);
         }
