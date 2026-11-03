@@ -1,13 +1,15 @@
 # Yet Another Zig Math Library (yazml)
-### What you think it would be.
+> What you think it would be.
+
+![Zig Version](https://img.shields.io/badge/zig-0.18.0-orange?logo=zig)
 
 > [!NOTE]
 > Still WIP and has not yet been tested in actual use.
-> Most of this library will stay very lightweight though, as i made this for the sole reason of other math libraries being
+> Most of this library will stay very lightweight though, as I made this for the sole reason of other math libraries being
 too heavyweight or overly complex to use for my personal liking.
 
 ## Status
-- [X] Vectors (Vec2, Vec3, Vec4)
+- [X] Vectors (`Vec2`, `Vec3`, `Vec4`)
 - [ ] Mat4 (IN PROGRESS)
 - [ ] Quaternions
 - [ ] Transforms
@@ -15,7 +17,7 @@ too heavyweight or overly complex to use for my personal liking.
 ## Installation
 Run this command:
 ```bash
-# This automatically puts it inside of your build.zig.zon and installs it
+# This automatically puts it inside of your build.zig.zon
 zig fetch --save git+https://github.com/t-benito/yazml
 ```
 Add it to your build.zig:
