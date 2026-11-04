@@ -146,6 +146,15 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns this matrixs components as an array of arrays of `T`.
+        pub fn toArray(self: *const Self) [4][4]T {
+            const arr = [4][4]T{};
+            inline for (0..4) |i| {
+                arr[i] = self.cols[i].toArray();
+            }
+            return arr;
+        }
+
         /// Returns a new matrix ... (TODO)
         pub fn mul(self: *const Self, other: Self) Self {
             var res = ZERO;
