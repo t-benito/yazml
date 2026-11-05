@@ -155,7 +155,7 @@ pub fn Mat4(comptime T: type) type {
             return arr;
         }
 
-        /// Returns a new matrix ... (TODO)
+        /// Returns a new matrix resulting from standard 4x4 matrix multiplication with `other`.
         pub fn mul(self: *const Self, other: Self) Self {
             var res = ZERO;
             inline for (0..4) |i| {
@@ -165,6 +165,18 @@ pub fn Mat4(comptime T: type) type {
                     .addV(self.cols[3].mulS(other.cols[i].w));
             }
             return res;
+        }
+
+        /// Multiplies this matrix by `other` in-place.
+        /// If you want to get a new matrix without modifying this one, use `mul` instead.
+        pub fn mulEq(self: *const Self, other: Self) void {
+            inline for (0..4) |i| {
+                const c = self.cols[0].mulS(other.cols[i].x)
+                    .addV(self.cols[1].mulS(other.cols[i].y))
+                    .addV(self.cols[2].mulS(other.cols[i].z))
+                    .addV(self.cols[3].mulS(other.cols[i].w));
+                self.cols[i] = c;
+            }
         }
     };
 }

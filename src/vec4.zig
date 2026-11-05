@@ -58,7 +58,7 @@ pub fn Vec4(comptime T: type) type {
             return [4]T{ self.x, self.y, self.z, self.w };
         }
 
-        /// Returns a new `Vec4` resulting from adding scalar components `x`, `y`, `z` and `w` to this vector.
+        /// Returns a new `Vec4` resulting from component-wise addition by `x`, `y`, `z` and `w`.
         pub fn add(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return init(
                 self.x + x,
@@ -68,12 +68,17 @@ pub fn Vec4(comptime T: type) type {
             );
         }
 
-        /// Returns a new `Vec3` resulting from component-wise addition of another vector `vec`.
+        /// Returns a new `Vec4` resulting from component-wise addition by `vec`.
         pub fn addV(self: *const Self, vec: Self) Self {
             return self.add(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec3` resulting from subtracting scalar components `x`, `y`, `z` and `w` from this vector.
+        /// Returns a new `Vec4` resulting from component-wise addition by `scalar`.
+        pub fn addS(self: *const Self, scalar: T) Self {
+            return self.add(scalar, scalar, scalar, scalar);
+        }
+
+        /// Returns a new `Vec4` resulting from component-wise subtraction by `x`, `y`, `z` and `w`.
         pub fn sub(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return init(
                 self.x - x,
@@ -83,12 +88,18 @@ pub fn Vec4(comptime T: type) type {
             );
         }
 
-        /// Returns a new `Vec4` resulting from component-wise subtraction of another vector `vec`.
+        /// Returns a new `Vec4` resulting from component-wise subtraction by `vec`.
         pub fn subV(self: *const Self, vec: Self) Self {
             return self.sub(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec4` resulting from dividing this vector's components by scalar values `x`, `y`, `z` and `w`.
+        /// Returns a new `Vec4` resulting from component-wise subtraction by `scalar`.
+        /// When the vector contains an integer type, this function truncating division.
+        pub fn subS(self: *const Self, scalar: T) Self {
+            return self.sub(scalar, scalar, scalar, scalar);
+        }
+
+        /// Returns a new `Vec4` resulting from component-wise division by `x`, `y`, `z` and `w`.
         /// When the vector contains an integer type, this function truncating division.
         pub fn div(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return if (comptime @typeInfo(T) == .float) init(
@@ -110,7 +121,13 @@ pub fn Vec4(comptime T: type) type {
             return self.div(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec4` resulting from multiplying this vector's components by scalar values `x`, `y`, `z` and `w`.
+        /// Returns a new `Vec4` resulting from component-wise division by `scalar`.
+        /// When the vector contains an integer type, this function truncating division.
+        pub fn divS(self: *const Self, scalar: T) Self {
+            return self.div(scalar, scalar, scalar, scalar);
+        }
+
+        /// Returns a new `Vec4` resulting from component-wise multiplication by `x`, `y`, `z` and `w`.
         pub fn mul(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return init(
                 self.x * x,
@@ -126,15 +143,20 @@ pub fn Vec4(comptime T: type) type {
         }
 
         // TODO: put this method in every vector type and for every type of math thingy
+        // (in progress but not finished yet)
 
         /// Returns a new `Vec4` resulting from component-wise multiplication by `scalar`.
         pub fn mulS(self: *const Self, scalar: T) Self {
-            return init(
-                self.x * scalar,
-                self.y * scalar,
-                self.z * scalar,
-                self.w * scalar,
-            );
+            return self.mul(scalar, scalar, scalar, scalar);
+        }
+
+        /// Adds `x`, `y`, `z` and `w` to this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `add()` instead.
+        pub fn plusEq(self: *Self, x: T, y: T, z: T, w: T) void {
+            self.x += x;
+            self.y += y;
+            self.z += z;
+            self.w += w;
         }
 
         /// Returns a new normalized `Vec4` scaled to unit length (1).

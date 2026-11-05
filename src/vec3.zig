@@ -45,6 +45,14 @@ pub fn Vec3(comptime T: type) type {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z);
         }
 
+        pub fn perpRight(self: *const Self, up: Self) Self {
+            return self.crossV(up).normalize();
+        }
+
+        pub fn perpLeft(self: *const Self, up: Self) Self {
+            return up.crossV(self).normalize();
+        }
+
         /// Returns this vectors components as an array of `T`.
         pub fn toArray(self: *const Self) [3]T {
             return [3]T{ self.x, self.y, self.z };
