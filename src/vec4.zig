@@ -58,7 +58,7 @@ pub fn Vec4(comptime T: type) type {
             return [4]T{ self.x, self.y, self.z, self.w };
         }
 
-        /// Returns a new `Vec4` resulting from component-wise addition by `x`, `y`, `z` and `w`.
+        /// Returns a new `Vec4` resulting from component-wise addition of `x`, `y`, `z` and `w`.
         pub fn add(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return init(
                 self.x + x,
@@ -68,17 +68,17 @@ pub fn Vec4(comptime T: type) type {
             );
         }
 
-        /// Returns a new `Vec4` resulting from component-wise addition by `vec`.
+        /// Returns a new `Vec4` resulting from component-wise addition of `vec`.
         pub fn addV(self: *const Self, vec: Self) Self {
             return self.add(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec4` resulting from component-wise addition by `scalar`.
+        /// Returns a new `Vec4` resulting from component-wise addition of `scalar`.
         pub fn addS(self: *const Self, scalar: T) Self {
             return self.add(scalar, scalar, scalar, scalar);
         }
 
-        /// Returns a new `Vec4` resulting from component-wise subtraction by `x`, `y`, `z` and `w`.
+        /// Returns a new `Vec4` resulting from component-wise subtraction of `x`, `y`, `z` and `w`.
         pub fn sub(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return init(
                 self.x - x,
@@ -88,12 +88,12 @@ pub fn Vec4(comptime T: type) type {
             );
         }
 
-        /// Returns a new `Vec4` resulting from component-wise subtraction by `vec`.
+        /// Returns a new `Vec4` resulting from component-wise subtraction of `vec`.
         pub fn subV(self: *const Self, vec: Self) Self {
             return self.sub(vec.x, vec.y, vec.z, vec.w);
         }
 
-        /// Returns a new `Vec4` resulting from component-wise subtraction by `scalar`.
+        /// Returns a new `Vec4` resulting from component-wise subtraction of `scalar`.
         /// When the vector contains an integer type, this function truncating division.
         pub fn subS(self: *const Self, scalar: T) Self {
             return self.sub(scalar, scalar, scalar, scalar);
@@ -142,9 +142,6 @@ pub fn Vec4(comptime T: type) type {
             return self.mul(vec.x, vec.y, vec.z, vec.w);
         }
 
-        // TODO: put this method in every vector type and for every type of math thingy
-        // (in progress but not finished yet)
-
         /// Returns a new `Vec4` resulting from component-wise multiplication by `scalar`.
         pub fn mulS(self: *const Self, scalar: T) Self {
             return self.mul(scalar, scalar, scalar, scalar);
@@ -157,6 +154,91 @@ pub fn Vec4(comptime T: type) type {
             self.y += y;
             self.z += z;
             self.w += w;
+        }
+
+        /// Adds `vec` to this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `addV()` instead.
+        pub fn plusEqV(self: *Self, vec: Self) void {
+            self.plusEq(vec.x, vec.y, vec.z, vec.w);
+        }
+
+        /// Adds `scalar` to this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `addS()` instead.
+        pub fn plusEqS(self: *Self, scalar: T) void {
+            self.plusEq(scalar, scalar, scalar, scalar);
+        }
+
+        /// Subtracts `x`, `y`, `z` and `w` from this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        pub fn subEq(self: *Self, x: T, y: T, z: T, w: T) void {
+            self.x -= x;
+            self.y -= y;
+            self.z -= z;
+            self.w -= w;
+        }
+
+        /// Subtracts `vec` from this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        pub fn subEqV(self: *Self, vec: Self) void {
+            self.subEq(vec.x, vec.y, vec.z, vec.w);
+        }
+
+        /// Subtracts `scalar` from this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        pub fn subEqS(self: *Self, scalar: T) void {
+            self.subEq(scalar, scalar, scalar, scalar);
+        }
+
+        /// Multiplies this vector by `x`, `y`, `z` and `w` in-place.
+        /// If you want to get a new vector without modifying the original, use `mul()` instead.
+        pub fn mulEq(self: *Self, x: T, y: T, z: T, w: T) void {
+            self.x *= x;
+            self.y *= y;
+            self.z *= z;
+            self.w *= w;
+        }
+
+        /// Multiplies this vector by `vec` in-place.
+        /// If you want to get a new vector without modifying the original, use `mulV()` instead.
+        pub fn mulEqV(self: *Self, vec: Self) void {
+            self.mulEq(vec.x, vec.y, vec.z, vec.w);
+        }
+
+        /// Multiplies this vector by `scalar` in-place.
+        /// If you want to get a new vector without modifying the original, use `mulS()` instead.
+        pub fn mulEqS(self: *Self, scalar: T) void {
+            self.mulEq(scalar, scalar, scalar, scalar);
+        }
+
+        /// Divides this vector by `x`, `y`, `z` and `w` in-place.
+        /// When the vector contains an integer type, this performs truncating division.
+        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        pub fn divEq(self: *Self, x: T, y: T, z: T, w: T) void {
+            if (comptime @typeInfo(T) == .float) {
+                self.x /= x;
+                self.y /= y;
+                self.z /= z;
+                self.w /= w;
+            } else {
+                self.x = @divTrunc(self.x, x);
+                self.y = @divTrunc(self.y, y);
+                self.z = @divTrunc(self.z, z);
+                self.w = @divTrunc(self.w, w);
+            }
+        }
+
+        /// Divides this vector by `vec` in-place.
+        /// When the vector contains an integer type, this performs truncating division.
+        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        pub fn divEqV(self: *Self, vec: Self) void {
+            self.divEq(vec.x, vec.y, vec.z, vec.w);
+        }
+
+        /// Divides this vector by `scalar` in-place.
+        /// When the vector contains an integer type, this performs truncating division.
+        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        pub fn divEqS(self: *Self, scalar: T) void {
+            self.divEq(scalar, scalar, scalar, scalar);
         }
 
         /// Returns a new normalized `Vec4` scaled to unit length (1).
