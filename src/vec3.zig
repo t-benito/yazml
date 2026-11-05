@@ -45,10 +45,12 @@ pub fn Vec3(comptime T: type) type {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z);
         }
 
+        /// Returns the perpendicular right of this vector relative to `up`.
         pub fn perpRight(self: *const Self, up: Self) Self {
             return self.crossV(up).normalize();
         }
 
+        /// Returns the perpendicular left of this vector relative to `up`.
         pub fn perpLeft(self: *const Self, up: Self) Self {
             return up.crossV(self).normalize();
         }
@@ -58,7 +60,7 @@ pub fn Vec3(comptime T: type) type {
             return [3]T{ self.x, self.y, self.z };
         }
 
-        /// Returns a new `Vec3` resulting from adding `x`, `y`, and `z` to this vector.
+        /// Returns a new `Vec3` resulting from component-wise addition of `x`, `y`, and `z`.
         pub fn add(self: *const Self, x: T, y: T, z: T) Self {
             return init(
                 self.x + x,
@@ -72,7 +74,12 @@ pub fn Vec3(comptime T: type) type {
             return self.add(vec.x, vec.y, vec.z);
         }
 
-        /// Returns a new `Vec3` resulting from subtracting `x`, `y`, and `z` from this vector.
+        /// Returns a new `Vec3` resulting from component-wise addition of `scalar`.
+        pub fn addS(self: *const Self, scalar: T) Self {
+            return self.add(scalar, scalar, scalar);
+        }
+
+        /// Returns a new `Vec3` resulting from component-wise subtraction of `x`, `y`, and `z`.
         pub fn sub(self: *const Self, x: T, y: T, z: T) Self {
             return init(
                 self.x - x,
@@ -84,6 +91,11 @@ pub fn Vec3(comptime T: type) type {
         /// Returns a new `Vec3` resulting from component-wise subtraction of `vec`.
         pub fn subV(self: *const Self, vec: Self) Self {
             return self.sub(vec.x, vec.y, vec.z);
+        }
+
+        /// Returns a new `Vec3` resulting from component-wise subtraction of `scalar`.
+        pub fn subS(self: *const Self, scalar: T) Self {
+            return self.sub(scalar, scalar, scalar);
         }
 
         /// Returns a new `Vec3` resulting from dividing this vector's components by `x`, `y`, and `z`.
@@ -100,6 +112,11 @@ pub fn Vec3(comptime T: type) type {
             return self.div(vec.x, vec.y, vec.z);
         }
 
+        /// Returns a new `Vec3` resulting from component-wise division by `scalar`.
+        pub fn divS(self: *const Self, scalar: T) Self {
+            return self.div(scalar, scalar, scalar);
+        }
+
         /// Returns a new `Vec3` resulting from multiplying this vector's components by `x`, `y`, and `z`.
         pub fn mul(self: *const Self, x: T, y: T, z: T) Self {
             return init(
@@ -112,6 +129,11 @@ pub fn Vec3(comptime T: type) type {
         /// Returns a new `Vec3` resulting from component-wise multiplication by `vec`.
         pub fn mulV(self: *const Self, vec: Self) Self {
             return self.mul(vec.x, vec.y, vec.z);
+        }
+
+        /// Returns a new `Vec3` resulting from component-wise multiplication by `scalar`.
+        pub fn mulS(self: *const Self, scalar: T) Self {
+            return self.mul(scalar, scalar, scalar);
         }
 
         /// Adds `x`, `y` and `z` to this vector in-place.
@@ -128,6 +150,12 @@ pub fn Vec3(comptime T: type) type {
             self.plusEq(vec.x, vec.y, vec.z);
         }
 
+        /// Adds `scalar` to this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `addS()` instead.
+        pub fn plusEqS(self: *Self, scalar: T) void {
+            self.plusEq(scalar, scalar, scalar);
+        }
+
         /// Adds `x`, `y` and `z` to this vector in-place.
         /// If you want to get a new vector without modifying the original, use `sub()` instead.
         pub fn subEq(self: *Self, x: T, y: T, z: T) void {
@@ -140,6 +168,12 @@ pub fn Vec3(comptime T: type) type {
         /// If you want to get a new vector without modifying the original, use `subV()` instead.
         pub fn subEqV(self: *Self, vec: Self) void {
             self.subEq(vec.x, vec.y, vec.z);
+        }
+
+        /// Subtracts `scalar` from this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `subS()` instead.
+        pub fn subEqS(self: *Self, scalar: T) void {
+            self.subEq(scalar, scalar, scalar);
         }
 
         /// Divides this vector's components by `x`, `y` and `z` in-place.
@@ -162,6 +196,12 @@ pub fn Vec3(comptime T: type) type {
             self.divEq(vec.x, vec.y, vec.z);
         }
 
+        /// Divides this vector by `scalar` component-wise in-place.
+        /// If you want to get a new vector without modifying this one, use `divS()` instead.
+        pub fn divEqS(self: *Self, scalar: T) void {
+            self.divEq(scalar, scalar, scalar);
+        }
+
         /// Multiplies this vector by `x`, `y` and `z` in-place.
         /// If you want to get a new vector without modifying this one, use `mul()` instead.
         pub fn mulEq(self: *Self, x: T, y: T, z: T) void {
@@ -174,6 +214,12 @@ pub fn Vec3(comptime T: type) type {
         /// If you want to get a new vector without modifying this one, use `mulV()` instead.
         pub fn mulEqV(self: *Self, vec: Self) void {
             self.mulEq(vec.x, vec.y, vec.z);
+        }
+
+        /// Multiplies this vector by `scalar` component-wise in-place.
+        /// If you want to get a new vector without modifying this one, use `mulS()` instead.
+        pub fn mulEqS(self: *Self, scalar: T) void {
+            self.mulEq(scalar, scalar, scalar);
         }
 
         /// Returns a new normalized `Vec3` scaled to unit length (1).
@@ -256,9 +302,14 @@ pub fn Vec3(comptime T: type) type {
             return self.distSqr(vec.x, vec.y, vec.z);
         }
 
+        /// Returns the dot (scalar) product between this vector and `x`, `y` and `z`.
+        pub fn dot(self: *const Self, x: T, y: T, z: T) T {
+            return (self.x * x) + (self.y * y) + (self.z * z);
+        }
+
         /// Returns the dot (scalar) product between this vector and `vec`.
-        pub fn dot(self: *const Self, left: Self) T {
-            return (self.x * left.x) + (self.y * left.y) + (self.z * left.z);
+        pub fn dotV(self: *const Self, left: Self) T {
+            return self.dot(left.x, left.y, left.z);
         }
     };
 }

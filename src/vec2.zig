@@ -61,7 +61,7 @@ pub fn Vec2(comptime T: type) type {
             return [2]T{ self.x, self.y };
         }
 
-        /// Returns a new `Vec2` resulting from adding `x` and `y` to this vector.
+        /// Returns a new `Vec2` resulting from component-wise addition of `x` and `y`.
         pub fn add(self: *const Self, x: T, y: T) Self {
             return init(
                 self.x + x,
@@ -72,6 +72,11 @@ pub fn Vec2(comptime T: type) type {
         /// Returns a new `Vec2` resulting from component-wise addition of `vec`.
         pub fn addV(self: *const Self, vec: Self) Self {
             return self.add(vec.x, vec.y);
+        }
+
+        /// Returns a new `Vec2` resulting from component-wise addition of `scalar`.
+        pub fn addS(self: *const Self, scalar: T) Self {
+            return self.add(scalar, scalar);
         }
 
         /// Returns a new `Vec2` resulting from subtracting `x` and `y` from this vector.
@@ -85,6 +90,11 @@ pub fn Vec2(comptime T: type) type {
         /// Returns a new `Vec2` resulting from component-wise subtraction of `vec`.
         pub fn subV(self: *const Self, vec: Self) Self {
             return self.add(vec.x, vec.y);
+        }
+
+        /// Returns a new `Vec2` resulting from component-wise subtraction of `vec`.
+        pub fn subS(self: *const Self, scalar: T) Self {
+            return self.add(scalar, scalar);
         }
 
         /// Returns a new `Vec2` resulting from dividing this vector's components by `x` and `y`.
@@ -105,7 +115,13 @@ pub fn Vec2(comptime T: type) type {
             return self.div(vec.x, vec.y);
         }
 
-        /// Returns a new `Vec2` resulting from multiplying this vector's components by `x` and `y`.
+        /// Returns a new `Vec2` resulting from component-wise division by `scalar`.
+        /// When the vector contains an integer type, this performs truncating division.
+        pub fn divS(self: *const Self, scalar: T) Self {
+            return self.div(scalar, scalar);
+        }
+
+        /// Returns a new `Vec2` resulting from component-wise multiplication by `x` and `y`.
         pub fn mul(self: *const Self, x: T, y: T) Self {
             return init(
                 self.x * x,
@@ -113,9 +129,14 @@ pub fn Vec2(comptime T: type) type {
             );
         }
 
-        /// Returns a new `Vec2` result from component-wise multiplication by `vec`.
+        /// Returns a new `Vec2` resulting from component-wise multiplication by `vec`.
         pub fn mulV(self: *const Self, vec: Self) Self {
             return self.mul(vec.x, vec.y);
+        }
+
+        /// Returns a new `Vec2` resulting from component-wise multiplication by `scalar`.
+        pub fn mulS(self: *const Self, scalar: T) Self {
+            return self.mul(scalar, scalar);
         }
 
         /// Adds `x` and `y` to this vector in-place.
@@ -138,7 +159,7 @@ pub fn Vec2(comptime T: type) type {
             self.y -= y;
         }
 
-        /// Subtracts `vec` to this vector in-place.
+        /// Subtracts `vec` from this vector in-place.
         /// If you want to return a new vector without modifying the original, use `subV()` instead.
         pub fn subEqV(self: *Self, vec: Self) void {
             self.subEq(vec.x, vec.y);
@@ -151,23 +172,35 @@ pub fn Vec2(comptime T: type) type {
             self.y /= y;
         }
 
-        /// Divides this vector by `vec` component-wise in-place.
+        /// Divides this vector's components by `vec` in-place.
         /// If you want to get a new vector without modifying this one, use `divV()` instead.
         pub fn divEqV(self: *Self, vec: Self) void {
             self.divEq(vec.x, vec.y);
         }
 
-        /// Multiplies this vector by `x` and `y` in-place.
+        /// Divides this vector's components by `scalar` in-place.
+        /// If you want to get a new vector without modifying this one, use `divS()` instead.
+        pub fn divEqS(self: *Self, scalar: T) void {
+            self.divEq(scalar, scalar);
+        }
+
+        /// Multiplies this vector's components by `x` and `y` in-place.
         /// If you want to get a new vector without modifying this one, use `mul()` instead.
         pub fn mulEq(self: *Self, x: T, y: T) void {
             self.x *= x;
             self.y *= y;
         }
 
-        /// Multiplies this vector by `vec` component-wise in-place.
+        /// Multiplies this vector's components by `vec` in-place.
         /// If you want to get a new vector without modifying this one, use `mulV()` instead.
         pub fn mulEqV(self: *Self, vec: Self) void {
             self.mulEq(vec.x, vec.y);
+        }
+
+        /// Multiplies this vector's components by `scalar` in-place.
+        /// If you want to get a new vector without modifying this one, use `mulS()` instead.
+        pub fn mulEqS(self: *Self, scalar: T) void {
+            self.mulEq(scalar, scalar);
         }
 
         /// Returns a new normalized `Vec2` scaled to unit length (1).
@@ -229,7 +262,7 @@ pub fn Vec2(comptime T: type) type {
             );
         }
 
-        /// Returns the cross product of this vector and `right`
+        /// Returns the cross product of this vector and `right`.
         pub fn crossV(self: *const Self, right: Self) Self {
             return self.cross(right.x, right.y);
         }
