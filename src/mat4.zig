@@ -12,9 +12,11 @@ pub fn Mat4(comptime T: type) type {
 
         cols: [4]Vec4,
 
-        // TODO: documntation
+        /// `Mat4` with all components set to `(0, 0, 0, 0)`.
         pub const ZERO = init(.ZERO, .ZERO, .ZERO, .ZERO);
 
+        // TODO: This comment is a placeholder... i dont have an idea.
+        /// The boring matrix.
         pub const IDENTITY = init(
             .init(1, 0, 0, 0),
             .init(0, 1, 0, 0),
@@ -29,6 +31,7 @@ pub fn Mat4(comptime T: type) type {
             };
         }
 
+        // comment TODO
         pub fn fromDiag(vec: Vec4) Self {
             return init(
                 .init(vec.x, 0, 0, 0),
@@ -146,7 +149,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
-        /// Returns this matrixs components as an array of arrays of `T`.
+        /// Returns this matrix as an array of arrays of `T`.
         pub fn toArray(self: *const Self) [4][4]T {
             const arr = [4][4]T{};
             inline for (0..4) |i| {
@@ -155,7 +158,7 @@ pub fn Mat4(comptime T: type) type {
             return arr;
         }
 
-        /// Returns a new matrix resulting from standard 4x4 matrix multiplication with `other`.
+        /// Returns a new matrix resulting from 4x4 matrix multiplication with `other`.
         pub fn mul(self: *const Self, other: Self) Self {
             var res = ZERO;
             inline for (0..4) |i| {
@@ -177,6 +180,61 @@ pub fn Mat4(comptime T: type) type {
                     .addV(self.cols[3].mulS(other.cols[i].w));
                 self.cols[i] = c;
             }
+        }
+
+        /// Returns the inverse of this matrix, or `null` if
+        /// the matrix is singular.
+        pub fn invert(self: *const Self) ?Self {
+            const c0 = self.cols[0];
+            const c1 = self.cols[1];
+            const c2 = self.cols[2];
+            const c3 = self.cols[3];
+
+            const s0 = c0.x * c1.y - c0.y * c1.x;
+            const s1 = c0.x * c1.z - c0.z * c1.x;
+            const s2 = c0.x * c1.w - c0.w * c1.x;
+            const s3 = c0.y * c1.z - c0.z * c1.y;
+            const s4 = c0.y * c1.w - c0.w * c1.y;
+            const s5 = c0.z * c1.w - c0.w * c1.z;
+
+            const cc0 = c2.x * c3.y - c2.y * c3.x;
+            const cc1 = c2.x * c3.z - c2.z * c3.x;
+            const cc2 = c2.x * c3.w - c2.w * c3.x;
+            const cc3 = c2.y * c3.z - c2.z * c3.y;
+            const cc4 = c2.y * c3.w - c2.w * c3.y;
+            const cc5 = c2.z * c3.w - c2.w * c3.z;
+
+            const det = s0 * cc5 - s1 * cc4 + s2 * cc3 + s3 * cc2 - s4 * cc1 + s5 * cc0;
+            if (@abs(det) < 1e-6)
+                return null;
+            const invDet = 1.0 / det;
+
+            return init(
+                .init(
+                    ( c1.y * cc5 - c1.z * cc4 + c1.w * cc3) * invDet,
+                    (-c0.y * cc5 + c0.z * cc4 - c0.w * cc3) * invDet,
+                    ( c3.y * s5  - c3.z * s4  + c3.w * s3 ) * invDet,
+                    (-c2.y * s5  + c2.z * s4  - c2.w * s3 ) * invDet,
+                ),
+                .init(
+                    (-c1.x * cc5 + c1.z * cc2 - c1.w * cc1) * invDet,
+                    ( c0.x * cc5 - c0.z * cc2 + c0.w * cc1) * invDet,
+                    (-c3.x * s5  + c3.z * s2  - c3.w * s1 ) * invDet,
+                    ( c2.x * s5  - c2.z * s2  + c2.w * s1 ) * invDet,
+                ),
+                .init(
+                    ( c1.x * cc4 - c1.y * cc2 + c1.w * cc0) * invDet,
+                    (-c0.x * cc4 + c0.y * cc2 - c0.w * cc0) * invDet,
+                    ( c3.x * s4  - c3.y * s2  + c3.w * s0 ) * invDet,
+                    (-c2.x * s4  + c2.y * s2  - c2.w * s0 ) * invDet,
+                ),
+                .init(
+                    (-c1.x * cc3 + c1.y * cc1 - c1.z * cc0) * invDet,
+                    ( c0.x * cc3 - c0.y * cc1 + c0.z * cc0) * invDet,
+                    (-c3.x * s3  + c3.y * s2  - c3.z * s0 ) * invDet,
+                    ( c2.x * s3  - c2.y * s2  + c2.z * s0 ) * invDet,
+                ),
+            );
         }
     };
 }
