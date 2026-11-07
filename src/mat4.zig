@@ -41,6 +41,21 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        /// Returns the main diagonal of this matrix.
+        pub fn diag(self: *const Self) Vec4 {
+            return .init(
+                self.cols[0].x,
+                self.cols[1].y,
+                self.cols[2].z,
+                self.cols[3].w,
+            );
+        }
+
+        /// Returns the sum of the values along the main diagonal of this matrix.
+        pub fn trace(self: *const Self) T {
+            return self.cols[0].x + self.cols[1].y + self.cols[2].z + self.cols[3].w;
+        }
+
         /// Returns a copy of the first row of this matrix.
         pub fn row0(self: *const Self) Vec4 {
             return .init(
