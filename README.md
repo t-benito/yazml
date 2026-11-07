@@ -2,6 +2,7 @@
 > What you think it would be.
 
 ![Zig Version](https://img.shields.io/badge/zig-0.18.0-orange?logo=zig)
+[![MIT License](https://img.shields.io/badge/MIT%20License-FFFFFF)](#)
 
 > [!NOTE]
 > Still WIP and has not yet been tested in actual use.
