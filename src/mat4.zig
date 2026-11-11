@@ -51,6 +51,27 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
+        pub fn det(self: *const Self) T {
+            const c0 = self.cols[0];
+            const c1 = self.cols[1];
+            const c2 = self.cols[2];
+            const c3 = self.cols[3];
+
+            const s0 = c2.x * c3.y - c2.y * c3.x;
+            const s1 = c2.x * c3.z - c2.z * c3.x;
+            const s2 = c2.x * c3.w - c2.w * c3.x;
+            const s3 = c2.y * c3.z - c2.z * c3.y;
+            const s4 = c2.y * c3.w - c2.w * c3.y;
+            const s5 = c2.z * c3.w - c2.w * c3.z;
+
+            const c00 =  (c1.y * s5 - c1.z * s4 + c1.w * s3);
+            const c01 = -(c1.x * s5 - c1.z * s2 + c1.w * s1);
+            const c02 =  (c1.x * s4 - c1.y * s2 + c1.w * s0);
+            const c03 = -(c1.x * s3 - c1.y * s1 + c1.z * s0);
+
+            return c0.x * c00 + c0.y * c01 + c0.z * c02 + c0.w * c03;
+        }
+
         /// Returns the sum of the values along the main diagonal of this matrix.
         pub fn trace(self: *const Self) T {
             return self.cols[0].x + self.cols[1].y + self.cols[2].z + self.cols[3].w;
@@ -219,10 +240,10 @@ pub fn Mat4(comptime T: type) type {
             const cc4 = c2.y * c3.w - c2.w * c3.y;
             const cc5 = c2.z * c3.w - c2.w * c3.z;
 
-            const det = s0 * cc5 - s1 * cc4 + s2 * cc3 + s3 * cc2 - s4 * cc1 + s5 * cc0;
-            if (@abs(det) < 1e-6)
+            const detr = s0 * cc5 - s1 * cc4 + s2 * cc3 + s3 * cc2 - s4 * cc1 + s5 * cc0;
+            if (@abs(detr) < 1e-6)
                 return null;
-            const invDet = 1.0 / det;
+            const invDet = 1.0 / detr;
 
             return init(
                 .init(
