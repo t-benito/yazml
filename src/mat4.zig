@@ -1,5 +1,3 @@
-// Copyright (c) 2026 benito. Licensed under the MIT license.
-
 const std = @import("std");
 const m = @import("root.zig");
 
@@ -64,9 +62,9 @@ pub fn Mat4(comptime T: type) type {
             const s4 = c2.y * c3.w - c2.w * c3.y;
             const s5 = c2.z * c3.w - c2.w * c3.z;
 
-            const c00 =  (c1.y * s5 - c1.z * s4 + c1.w * s3);
+            const c00 = (c1.y * s5 - c1.z * s4 + c1.w * s3);
             const c01 = -(c1.x * s5 - c1.z * s2 + c1.w * s1);
-            const c02 =  (c1.x * s4 - c1.y * s2 + c1.w * s0);
+            const c02 = (c1.x * s4 - c1.y * s2 + c1.w * s0);
             const c03 = -(c1.x * s3 - c1.y * s1 + c1.z * s0);
 
             return c0.x * c00 + c0.y * c01 + c0.z * c02 + c0.w * c03;
@@ -247,28 +245,28 @@ pub fn Mat4(comptime T: type) type {
 
             return init(
                 .init(
-                    ( c1.y * cc5 - c1.z * cc4 + c1.w * cc3) * invDet,
+                    (c1.y * cc5 - c1.z * cc4 + c1.w * cc3) * invDet,
                     (-c0.y * cc5 + c0.z * cc4 - c0.w * cc3) * invDet,
-                    ( c3.y * s5  - c3.z * s4  + c3.w * s3 ) * invDet,
-                    (-c2.y * s5  + c2.z * s4  - c2.w * s3 ) * invDet,
+                    (c3.y * s5 - c3.z * s4 + c3.w * s3) * invDet,
+                    (-c2.y * s5 + c2.z * s4 - c2.w * s3) * invDet,
                 ),
                 .init(
                     (-c1.x * cc5 + c1.z * cc2 - c1.w * cc1) * invDet,
-                    ( c0.x * cc5 - c0.z * cc2 + c0.w * cc1) * invDet,
-                    (-c3.x * s5  + c3.z * s2  - c3.w * s1 ) * invDet,
-                    ( c2.x * s5  - c2.z * s2  + c2.w * s1 ) * invDet,
+                    (c0.x * cc5 - c0.z * cc2 + c0.w * cc1) * invDet,
+                    (-c3.x * s5 + c3.z * s2 - c3.w * s1) * invDet,
+                    (c2.x * s5 - c2.z * s2 + c2.w * s1) * invDet,
                 ),
                 .init(
-                    ( c1.x * cc4 - c1.y * cc2 + c1.w * cc0) * invDet,
+                    (c1.x * cc4 - c1.y * cc2 + c1.w * cc0) * invDet,
                     (-c0.x * cc4 + c0.y * cc2 - c0.w * cc0) * invDet,
-                    ( c3.x * s4  - c3.y * s2  + c3.w * s0 ) * invDet,
-                    (-c2.x * s4  + c2.y * s2  - c2.w * s0 ) * invDet,
+                    (c3.x * s4 - c3.y * s2 + c3.w * s0) * invDet,
+                    (-c2.x * s4 + c2.y * s2 - c2.w * s0) * invDet,
                 ),
                 .init(
                     (-c1.x * cc3 + c1.y * cc1 - c1.z * cc0) * invDet,
-                    ( c0.x * cc3 - c0.y * cc1 + c0.z * cc0) * invDet,
-                    (-c3.x * s3  + c3.y * s2  - c3.z * s0 ) * invDet,
-                    ( c2.x * s3  - c2.y * s2  + c2.z * s0 ) * invDet,
+                    (c0.x * cc3 - c0.y * cc1 + c0.z * cc0) * invDet,
+                    (-c3.x * s3 + c3.y * s2 - c3.z * s0) * invDet,
+                    (c2.x * s3 - c2.y * s2 + c2.z * s0) * invDet,
                 ),
             );
         }
