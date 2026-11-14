@@ -51,11 +51,12 @@ pub fn Vec4(comptime T: type) type {
             return (self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w);
         }
 
-        /// Returns this vectors components as an array of `T`.
+        /// Returns a copy of this vectors components as an array of `T`.
         pub fn toArray(self: *const Self) [4]T {
             return [4]T{ self.x, self.y, self.z, self.w };
         }
 
+        /// Returns pointers to this vectors components as an array of `T`.
         pub fn ptrArray(self: *const Self) [4]*T {
             return [4]*T{ &self.x, &self.y, &self.z, &self.w };
         }

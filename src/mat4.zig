@@ -183,7 +183,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
-        /// Returns this matrix as an array of arrays of `T`.
+        /// Returns a copy of this matrix as an array of arrays of `T`.
         pub fn toArray(self: *const Self) [4][4]T {
             const arr = [4][4]T{};
             inline for (0..4) |i| {
@@ -192,12 +192,40 @@ pub fn Mat4(comptime T: type) type {
             return arr;
         }
 
+        /// Returns pointers to this matrix as an array of arrays of `T`.
         pub fn ptrArray(self: *const Self) [4][4]*T {
             const arr = [4][4]*T{};
             inline for (0..4) |i| {
                 arr[i] = self.cols[i].ptrArray();
             }
             return arr;
+        }
+
+        /// Returns a new matrix resulting from component-wise addition with `other`.
+        pub fn add(self: *const Self, other: Self) Self {
+            var res = ZERO;
+            inline for (0..4) |i| {
+                res.cols[i] = self.cols[i].addV(other.cols[i]);
+            }
+            return res;
+        }
+
+        /// Returns a new matrix resulting from component-wise subtraction with `other`.
+        pub fn sub(self: *const Self, other: Self) Self {
+            var res = ZERO;
+            inline for (0..4) |i| {
+                res.cols[i] = self.cols[i].subV(other.cols[i]);
+            }
+            return res;
+        }
+
+        /// Returns a new matrix resulting from component-wise division by `scalar`
+        pub fn divS(self: *const Self, scalar: T) Self {
+            var res = ZERO;
+            inline for (0..4) |i| {
+                res.cols[i] = self.cols[i].divS(scalar);
+            }
+            return res;
         }
 
         /// Returns a new matrix resulting from 4x4 matrix multiplication with `other`.
@@ -212,14 +240,61 @@ pub fn Mat4(comptime T: type) type {
             return res;
         }
 
+        /// Returns a new matrix resulting from 4x4 matrix multiplication with `scalar`.
+        pub fn mulS(self: *const Self, scalar: T) Self {
+            var res = ZERO;
+            inline for (0..4) |i| {
+                res.cols[i] = self.cols[0].mulS(scalar)
+                    .addV(self.cols[1].mulS(scalar))
+                    .addV(self.cols[2].mulS(scalar))
+                    .addV(self.cols[3].mulS(scalar));
+            }
+            return res;
+        }
+
+        /// Adds `other` to this matrix in-place.
+        /// If you want to get a new matrix without modifying this one, use `add` instead.
+        pub fn plusEq(self: *Self, other: Self) Self {
+            inline for (0..4) |i| {
+                self.cols[i].plusEqV(other.cols[i]);
+            }
+        }
+
+        /// Subtracts `other` from this matrix in-place.
+        /// If you want to get a new matrix without modifying this one, use `add` instead.
+        pub fn subEq(self: *Self, other: Self) Self {
+            inline for (0..4) |i| {
+                self.cols[i].subEqV(other.cols[i]);
+            }
+        }
+        /// Divides every element of this matrix by `scalar` in-place.
+        /// If you want to get a new matrix without modifying this one, use `divS` instead.
+        pub fn divEqS(self: *Self, scalar: T) Self {
+            inline for (0..4) |i| {
+                self.cols[i].divEqS(scalar);
+            }
+        }
+
         /// Multiplies this matrix by `other` in-place.
         /// If you want to get a new matrix without modifying this one, use `mul` instead.
-        pub fn mulEq(self: *const Self, other: Self) void {
+        pub fn mulEq(self: *Self, other: Self) void {
             inline for (0..4) |i| {
                 const c = self.cols[0].mulS(other.cols[i].x)
                     .addV(self.cols[1].mulS(other.cols[i].y))
                     .addV(self.cols[2].mulS(other.cols[i].z))
                     .addV(self.cols[3].mulS(other.cols[i].w));
+                self.cols[i] = c;
+            }
+        }
+
+        /// Multiplies this matrix by `scalar` in-place.
+        /// If you want to get a new matrix without modifying this one, use `mulS` instead.
+        pub fn mulEqS(self: *Self, scalar: T) void {
+            inline for (0..4) |i| {
+                const c = self.cols[0].mulS(scalar)
+                    .addV(self.cols[1].mulS(scalar))
+                    .addV(self.cols[2].mulS(scalar))
+                    .addV(self.cols[3].mulS(scalar));
                 self.cols[i] = c;
             }
         }
