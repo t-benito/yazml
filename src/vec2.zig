@@ -24,7 +24,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns the magnitude (length) of the vector.
-        pub fn len(self: *const Self) T {
+        pub fn len(self: Self) T {
             const res = (self.x * self.x) + (self.y * self.y);
             return if (comptime @typeInfo(T) == .float)
                 @sqrt(res)
@@ -34,12 +34,12 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns the squared magnitude (length) of the vector.
         /// This is typically faster than the `len()` function, as it doesnt use `@sqrt`.
-        pub fn lenSqr(self: *const Self) T {
+        pub fn lenSqr(self: Self) T {
             return (self.x * self.x) + (self.y * self.y);
         }
 
         // Returns the perpendicular vector on the right side of this vector.
-        pub fn perpRight(self: *const Self) Self {
+        pub fn perpRight(self: Self) Self {
             return init(
                 self.y,
                 -self.x,
@@ -47,7 +47,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         // Returns the perpendicular vector on the left side of this vector.
-        pub fn perpLeft(self: *const Self) Self {
+        pub fn perpLeft(self: Self) Self {
             return init(
                 -self.y,
                 self.x,
@@ -55,17 +55,17 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a copy of this vectors components as an array of `T`.
-        pub fn toArray(self: *const Self) [2]T {
+        pub fn toArray(self: Self) [2]T {
             return [2]T{ self.x, self.y };
         }
 
         /// Returns pointers to this vectors components as an array of `T`.
-        pub fn ptrArray(self: *const Self) [2]*T {
+        pub fn ptrArray(self: Self) [2]*T {
             return [2]*T{ &self.x, &self.y };
         }
 
         /// Returns a new `Vec2` resulting from component-wise addition of `x` and `y`.
-        pub fn add(self: *const Self, x: T, y: T) Self {
+        pub fn add(self: Self, x: T, y: T) Self {
             return init(
                 self.x + x,
                 self.y + y,
@@ -73,17 +73,17 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a new `Vec2` resulting from component-wise addition of `vec`.
-        pub fn addV(self: *const Self, vec: Self) Self {
+        pub fn addV(self: Self, vec: Self) Self {
             return self.add(vec.x, vec.y);
         }
 
         /// Returns a new `Vec2` resulting from component-wise addition of `scalar`.
-        pub fn addS(self: *const Self, scalar: T) Self {
+        pub fn addS(self: Self, scalar: T) Self {
             return self.add(scalar, scalar);
         }
 
         /// Returns a new `Vec2` resulting from subtracting `x` and `y` from this vector.
-        pub fn sub(self: *const Self, x: T, y: T) Self {
+        pub fn sub(self: Self, x: T, y: T) Self {
             return init(
                 self.x - x,
                 self.y - y,
@@ -91,18 +91,18 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a new `Vec2` resulting from component-wise subtraction of `vec`.
-        pub fn subV(self: *const Self, vec: Self) Self {
+        pub fn subV(self: Self, vec: Self) Self {
             return self.add(vec.x, vec.y);
         }
 
         /// Returns a new `Vec2` resulting from component-wise subtraction of `vec`.
-        pub fn subS(self: *const Self, scalar: T) Self {
+        pub fn subS(self: Self, scalar: T) Self {
             return self.add(scalar, scalar);
         }
 
         /// Returns a new `Vec2` resulting from dividing this vector's components by `x` and `y`.
         /// When the vector contains an integer type, this performs truncating division.
-        pub fn div(self: *const Self, x: T, y: T) Self {
+        pub fn div(self: Self, x: T, y: T) Self {
             return if (comptime @typeInfo(T) == .int) init(
                 @divTrunc(self.x, x),
                 @divTrunc(self.y, y),
@@ -114,18 +114,18 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` resulting from component-wise division by `vec`.
         /// When the vector contains an integer type, this performs truncating division.
-        pub fn divV(self: *const Self, vec: Self) Self {
+        pub fn divV(self: Self, vec: Self) Self {
             return self.div(vec.x, vec.y);
         }
 
         /// Returns a new `Vec2` resulting from component-wise division by `scalar`.
         /// When the vector contains an integer type, this performs truncating division.
-        pub fn divS(self: *const Self, scalar: T) Self {
+        pub fn divS(self: Self, scalar: T) Self {
             return self.div(scalar, scalar);
         }
 
         /// Returns a new `Vec2` resulting from component-wise multiplication by `x` and `y`.
-        pub fn mul(self: *const Self, x: T, y: T) Self {
+        pub fn mul(self: Self, x: T, y: T) Self {
             return init(
                 self.x * x,
                 self.y * y,
@@ -133,12 +133,12 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a new `Vec2` resulting from component-wise multiplication by `vec`.
-        pub fn mulV(self: *const Self, vec: Self) Self {
+        pub fn mulV(self: Self, vec: Self) Self {
             return self.mul(vec.x, vec.y);
         }
 
         /// Returns a new `Vec2` resulting from component-wise multiplication by `scalar`.
-        pub fn mulS(self: *const Self, scalar: T) Self {
+        pub fn mulS(self: Self, scalar: T) Self {
             return self.mul(scalar, scalar);
         }
 
@@ -207,7 +207,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a new normalized `Vec2` scaled to unit length (1).
-        pub fn normalize(self: *const Self) Self {
+        pub fn normalize(self: Self) Self {
             const scale = 1 / self.len();
             return init(
                 self.x * scale,
@@ -225,7 +225,7 @@ pub fn Vec2(comptime T: type) type {
 
         /// Returns a new `Vec2` with the rounded values of each component.
         /// Use this only if the type of this vector is a float.
-        pub fn round(self: *const Self) Self {
+        pub fn round(self: Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
             return init(
                 @round(self.x),
@@ -243,7 +243,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a new `Vec2` with the absolute values of each component.
-        pub fn abs(self: *const Self) Self {
+        pub fn abs(self: Self) Self {
             return .{
                 .x = @abs(self.x),
                 .y = @abs(self.y),
@@ -258,7 +258,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns the cross product of this vector and `x` and `y`.
-        pub fn cross(self: *const Self, x: T, y: T) Self {
+        pub fn cross(self: Self, x: T, y: T) Self {
             return init(
                 self.y * x - self.x - y,
                 self.x * y - self.y - x,
@@ -266,12 +266,12 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns the cross product of this vector and `right`.
-        pub fn crossV(self: *const Self, right: Self) Self {
+        pub fn crossV(self: Self, right: Self) Self {
             return self.cross(right.x, right.y);
         }
 
         /// Returns the Euclidean distance between this point and `x` and `y`.
-        pub fn dist(self: *const Self, x: T, y: T) T {
+        pub fn dist(self: Self, x: T, y: T) T {
             const res = ((x - self.x) * (x - self.x)) + ((y - self.y) * (y - self.y));
             return if (comptime @typeInfo(T) == .float)
                 @sqrt(res)
@@ -280,24 +280,24 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns the Euclidean distance between this point and `vec`.
-        pub fn distV(self: *const Self, vec: Self) T {
+        pub fn distV(self: Self, vec: Self) T {
             return self.dist(vec.x, vec.y);
         }
 
         /// Returns the squared Euclidian distance between this point and `x` and `y`.
         /// This is typically faster than using `dist()` as it does not use `@sqrt()`.
-        pub fn distSqr(self: *const Self, x: T, y: T) T {
+        pub fn distSqr(self: Self, x: T, y: T) T {
             return ((x - self.x) * (x - self.x)) + ((y - self.y) * (y - self.y));
         }
 
         /// Returns the squared Euclidian distance between this point and `vec`.
         /// This is typically faster than using `dist()` as it does not use `@sqrt()`.
-        pub fn distSqrV(self: *const Self, vec: Self) T {
+        pub fn distSqrV(self: Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y);
         }
 
         /// Returns the dot (scalar) product of this vector and `left`.
-        pub fn dot(self: *const Self, left: Self) T {
+        pub fn dot(self: Self, left: Self) T {
             return (self.x * left.x) + (self.y * left.y);
         }
     };

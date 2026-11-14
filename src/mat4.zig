@@ -40,7 +40,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns the main diagonal of this matrix.
-        pub fn diag(self: *const Self) Vec4 {
+        pub fn diag(self: Self) Vec4 {
             return .init(
                 self.cols[0].x,
                 self.cols[1].y,
@@ -49,7 +49,7 @@ pub fn Mat4(comptime T: type) type {
             );
         }
 
-        pub fn det(self: *const Self) T {
+        pub fn det(self: Self) T {
             const c0 = self.cols[0];
             const c1 = self.cols[1];
             const c2 = self.cols[2];
@@ -71,12 +71,12 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns the sum of the values along the main diagonal of this matrix.
-        pub fn trace(self: *const Self) T {
+        pub fn trace(self: Self) T {
             return self.cols[0].x + self.cols[1].y + self.cols[2].z + self.cols[3].w;
         }
 
         /// Returns a copy of the first row of this matrix.
-        pub fn row0(self: *const Self) Vec4 {
+        pub fn row0(self: Self) Vec4 {
             return .init(
                 self.cols[0].x,
                 self.cols[1].x,
@@ -86,7 +86,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a copy of the second row of this matrix.
-        pub fn row1(self: *const Self) Vec4 {
+        pub fn row1(self: Self) Vec4 {
             return .init(
                 self.cols[0].y,
                 self.cols[1].y,
@@ -96,7 +96,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a copy of the third row of this matrix.
-        pub fn row2(self: *const Self) Vec4 {
+        pub fn row2(self: Self) Vec4 {
             return .init(
                 self.cols[0].z,
                 self.cols[1].z,
@@ -106,7 +106,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a copy of the fourth row of this matrix.
-        pub fn row3(self: *const Self) Vec4 {
+        pub fn row3(self: Self) Vec4 {
             return .init(
                 self.cols[0].w,
                 self.cols[1].w,
@@ -184,7 +184,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a copy of this matrix as an array of arrays of `T`.
-        pub fn toArray(self: *const Self) [4][4]T {
+        pub fn toArray(self: Self) [4][4]T {
             const arr = [4][4]T{};
             inline for (0..4) |i| {
                 arr[i] = self.cols[i].toArray();
@@ -193,7 +193,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns pointers to this matrix as an array of arrays of `T`.
-        pub fn ptrArray(self: *const Self) [4][4]*T {
+        pub fn ptrArray(self: Self) [4][4]*T {
             const arr = [4][4]*T{};
             inline for (0..4) |i| {
                 arr[i] = self.cols[i].ptrArray();
@@ -202,7 +202,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a new matrix resulting from component-wise addition with `other`.
-        pub fn add(self: *const Self, other: Self) Self {
+        pub fn add(self: Self, other: Self) Self {
             var res = ZERO;
             inline for (0..4) |i| {
                 res.cols[i] = self.cols[i].addV(other.cols[i]);
@@ -211,7 +211,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a new matrix resulting from component-wise subtraction with `other`.
-        pub fn sub(self: *const Self, other: Self) Self {
+        pub fn sub(self: Self, other: Self) Self {
             var res = ZERO;
             inline for (0..4) |i| {
                 res.cols[i] = self.cols[i].subV(other.cols[i]);
@@ -220,7 +220,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a new matrix resulting from component-wise division by `scalar`
-        pub fn divS(self: *const Self, scalar: T) Self {
+        pub fn divS(self: Self, scalar: T) Self {
             var res = ZERO;
             inline for (0..4) |i| {
                 res.cols[i] = self.cols[i].divS(scalar);
@@ -229,7 +229,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a new matrix resulting from 4x4 matrix multiplication with `other`.
-        pub fn mul(self: *const Self, other: Self) Self {
+        pub fn mul(self: Self, other: Self) Self {
             var res = ZERO;
             inline for (0..4) |i| {
                 res.cols[i] = self.cols[0].mulS(other.cols[i].x)
@@ -241,7 +241,7 @@ pub fn Mat4(comptime T: type) type {
         }
 
         /// Returns a new matrix resulting from 4x4 matrix multiplication with `scalar`.
-        pub fn mulS(self: *const Self, scalar: T) Self {
+        pub fn mulS(self: Self, scalar: T) Self {
             var res = ZERO;
             inline for (0..4) |i| {
                 res.cols[i] = self.cols[0].mulS(scalar)
@@ -301,7 +301,7 @@ pub fn Mat4(comptime T: type) type {
 
         /// Returns the inverse of this matrix, or `null` if
         /// the matrix is singular.
-        pub fn invert(self: *const Self) ?Self {
+        pub fn invert(self: Self) ?Self {
             const c0 = self.cols[0];
             const c1 = self.cols[1];
             const c2 = self.cols[2];
