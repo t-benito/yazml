@@ -54,9 +54,14 @@ pub fn Vec2(comptime T: type) type {
             );
         }
 
-        /// Returns this vectors components as an array of `T`.
+        /// Returns a copy of this vectors components as an array of `T`.
         pub fn toArray(self: *const Self) [2]T {
             return [2]T{ self.x, self.y };
+        }
+
+        /// Returns pointers to this vectors components as an array of `T`.
+        pub fn ptrArray(self: *const Self) [2]*T {
+            return [2]*T{ &self.x, &self.y };
         }
 
         /// Returns a new `Vec2` resulting from component-wise addition of `x` and `y`.

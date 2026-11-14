@@ -192,6 +192,14 @@ pub fn Mat4(comptime T: type) type {
             return arr;
         }
 
+        pub fn ptrArray(self: *const Self) [4][4]*T {
+            const arr = [4][4]*T{};
+            inline for (0..4) |i| {
+                arr[i] = self.cols[i].ptrArray();
+            }
+            return arr;
+        }
+
         /// Returns a new matrix resulting from 4x4 matrix multiplication with `other`.
         pub fn mul(self: *const Self, other: Self) Self {
             var res = ZERO;

@@ -56,6 +56,10 @@ pub fn Vec4(comptime T: type) type {
             return [4]T{ self.x, self.y, self.z, self.w };
         }
 
+        pub fn ptrArray(self: *const Self) [4]*T {
+            return [4]*T{ &self.x, &self.y, &self.z, &self.w };
+        }
+
         /// Returns a new `Vec4` resulting from component-wise addition of `x`, `y`, `z` and `w`.
         pub fn add(self: *const Self, x: T, y: T, z: T, w: T) Self {
             return init(
