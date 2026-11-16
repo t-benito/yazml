@@ -18,6 +18,10 @@ pub fn Vec3(comptime T: type) type {
         pub const ONE = init(1, 1, 1);
         /// Up unit vector `(0, 1, 0)`.
         pub const UP = init(0, 1, 0);
+        /// X unit vector `(1, 0, 0)`
+        pub const UNIT_X = init(1, 0, 0);
+        /// Z unit vector `(0, 0, 1)`
+        pub const UNIT_Z = init(0, 0, 1);
 
         /// Returns a new 3D vector with the given `x`, `y`, and `z` coordinates.
         pub fn init(x: T, y: T, z: T) Self {
@@ -140,7 +144,7 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Adds `x`, `y` and `z` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `add()` instead.
+        /// If you want to get a new vector without modifying the original, use `add` instead.
         pub fn plusEq(self: *Self, x: T, y: T, z: T) void {
             self.x += x;
             self.y += y;
@@ -148,19 +152,19 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Adds `vec` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `addV()` instead.
+        /// If you want to get a new vector without modifying the original, use `addV` instead.
         pub fn plusEqV(self: *Self, vec: Self) void {
             self.plusEq(vec.x, vec.y, vec.z);
         }
 
         /// Adds `scalar` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `addS()` instead.
+        /// If you want to get a new vector without modifying the original, use `addS` instead.
         pub fn plusEqS(self: *Self, scalar: T) void {
             self.plusEq(scalar, scalar, scalar);
         }
 
         /// Adds `x`, `y` and `z` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        /// If you want to get a new vector without modifying the original, use `sub` instead.
         pub fn subEq(self: *Self, x: T, y: T, z: T) void {
             self.x -= x;
             self.y -= y;
@@ -168,19 +172,19 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Subtracts `vec` from this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `subV()` instead.
+        /// If you want to get a new vector without modifying the original, use `subV` instead.
         pub fn subEqV(self: *Self, vec: Self) void {
             self.subEq(vec.x, vec.y, vec.z);
         }
 
         /// Subtracts `scalar` from this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `subS()` instead.
+        /// If you want to get a new vector without modifying the original, use `subS` instead.
         pub fn subEqS(self: *Self, scalar: T) void {
             self.subEq(scalar, scalar, scalar);
         }
 
         /// Divides this vector's components by `x`, `y` and `z` in-place.
-        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        /// If you want to get a new vector without modifying this one, use `div` instead.
         pub fn divEq(self: *Self, x: T, y: T, z: T) void {
             if (comptime @typeInfo(T) == .float) {
                 self.x /= x;
@@ -194,19 +198,19 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Divides this vector by `vec` component-wise in-place.
-        /// If you want to get a new vector without modifying this one, use `divV()` instead.
+        /// If you want to get a new vector without modifying this one, use `divV` instead.
         pub fn divEqV(self: *Self, vec: Self) void {
             self.divEq(vec.x, vec.y, vec.z);
         }
 
         /// Divides this vector by `scalar` component-wise in-place.
-        /// If you want to get a new vector without modifying this one, use `divS()` instead.
+        /// If you want to get a new vector without modifying this one, use `divS` instead.
         pub fn divEqS(self: *Self, scalar: T) void {
             self.divEq(scalar, scalar, scalar);
         }
 
         /// Multiplies this vector by `x`, `y` and `z` in-place.
-        /// If you want to get a new vector without modifying this one, use `mul()` instead.
+        /// If you want to get a new vector without modifying this one, use `mul` instead.
         pub fn mulEq(self: *Self, x: T, y: T, z: T) void {
             self.x *= x;
             self.y *= y;
@@ -214,13 +218,13 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Multiplies this vector by `vec` component-wise in-place.
-        /// If you want to get a new vector without modifying this one, use `mulV()` instead.
+        /// If you want to get a new vector without modifying this one, use `mulV` instead.
         pub fn mulEqV(self: *Self, vec: Self) void {
             self.mulEq(vec.x, vec.y, vec.z);
         }
 
         /// Multiplies this vector by `scalar` component-wise in-place.
-        /// If you want to get a new vector without modifying this one, use `mulS()` instead.
+        /// If you want to get a new vector without modifying this one, use `mulS` instead.
         pub fn mulEqS(self: *Self, scalar: T) void {
             self.mulEq(scalar, scalar, scalar);
         }
@@ -236,7 +240,7 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Normalizes this `Vec3` to unit length (1) in-place.
-        /// If you want to get a new vector without modifying this one, use `normalize()` instead.
+        /// If you want to get a new vector without modifying this one, use `normalize` instead.
         pub fn normalizeEq(self: *Self) void {
             const scale = 1 / self.len();
             self.x *= scale;
@@ -257,7 +261,7 @@ pub fn Vec3(comptime T: type) type {
 
         /// Replaces each component of this vector with its rounded value in-place.
         /// Use this only if the type of this vector is a float.
-        /// If you want to get a new vector without modifying this one, use `round()` instead.
+        /// If you want to get a new vector without modifying this one, use `round` instead.
         pub fn roundEq(self: *Self) Self {
             comptime std.debug.assert(@typeInfo(T) == .float);
             self.x = @round(self.x);
@@ -294,13 +298,13 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Returns the squared Euclidian distance between this point and `x`, `y` and `z`.
-        /// This is typically faster than `dst()` as it does not use `@sqrt()`.
+        /// This is typically faster than `dst()` as it does not use `@sqrt`.
         pub fn distSqr(self: Self, x: T, y: T, z: T) T {
             return ((x - self.x) * (x - self.x)) + ((y - self.y) * (y - self.y)) + ((z - self.z) * (z - self.z));
         }
 
         /// Returns the squared Euclidian distance between this point and `vec`.
-        /// This is typically faster than `dst()` as it does not use `@sqrt()`.
+        /// This is typically faster than `dst()` as it does not use `@sqrt`.
         pub fn distSqrV(self: Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y, vec.z);
         }

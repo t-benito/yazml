@@ -151,7 +151,7 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Adds `x`, `y`, `z` and `w` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `add()` instead.
+        /// If you want to get a new vector without modifying the original, use `add` instead.
         pub fn plusEq(self: *Self, x: T, y: T, z: T, w: T) void {
             self.x += x;
             self.y += y;
@@ -160,19 +160,19 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Adds `vec` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `addV()` instead.
+        /// If you want to get a new vector without modifying the original, use `addV` instead.
         pub fn plusEqV(self: *Self, vec: Self) void {
             self.plusEq(vec.x, vec.y, vec.z, vec.w);
         }
 
         /// Adds `scalar` to this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `addS()` instead.
+        /// If you want to get a new vector without modifying the original, use `add` instead.
         pub fn plusEqS(self: *Self, scalar: T) void {
             self.plusEq(scalar, scalar, scalar, scalar);
         }
 
         /// Subtracts `x`, `y`, `z` and `w` from this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        /// If you want to get a new vector without modifying the original, use `sub` instead.
         pub fn subEq(self: *Self, x: T, y: T, z: T, w: T) void {
             self.x -= x;
             self.y -= y;
@@ -181,19 +181,19 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Subtracts `vec` from this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        /// If you want to get a new vector without modifying the original, use `sub` instead.
         pub fn subEqV(self: *Self, vec: Self) void {
             self.subEq(vec.x, vec.y, vec.z, vec.w);
         }
 
         /// Subtracts `scalar` from this vector in-place.
-        /// If you want to get a new vector without modifying the original, use `sub()` instead.
+        /// If you want to get a new vector without modifying the original, use `sub` instead.
         pub fn subEqS(self: *Self, scalar: T) void {
             self.subEq(scalar, scalar, scalar, scalar);
         }
 
         /// Multiplies this vector by `x`, `y`, `z` and `w` in-place.
-        /// If you want to get a new vector without modifying the original, use `mul()` instead.
+        /// If you want to get a new vector without modifying the original, use `mul` instead.
         pub fn mulEq(self: *Self, x: T, y: T, z: T, w: T) void {
             self.x *= x;
             self.y *= y;
@@ -202,20 +202,20 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Multiplies this vector by `vec` in-place.
-        /// If you want to get a new vector without modifying the original, use `mulV()` instead.
+        /// If you want to get a new vector without modifying the original, use `mulV` instead.
         pub fn mulEqV(self: *Self, vec: Self) void {
             self.mulEq(vec.x, vec.y, vec.z, vec.w);
         }
 
         /// Multiplies this vector by `scalar` in-place.
-        /// If you want to get a new vector without modifying the original, use `mulS()` instead.
+        /// If you want to get a new vector without modifying the original, use `mulS` instead.
         pub fn mulEqS(self: *Self, scalar: T) void {
             self.mulEq(scalar, scalar, scalar, scalar);
         }
 
         /// Divides this vector by `x`, `y`, `z` and `w` in-place.
         /// When the vector contains an integer type, this performs truncating division.
-        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        /// If you want to get a new vector without modifying this one, use `div` instead.
         pub fn divEq(self: *Self, x: T, y: T, z: T, w: T) void {
             if (comptime @typeInfo(T) == .float) {
                 self.x /= x;
@@ -232,14 +232,14 @@ pub fn Vec4(comptime T: type) type {
 
         /// Divides this vector by `vec` in-place.
         /// When the vector contains an integer type, this performs truncating division.
-        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        /// If you want to get a new vector without modifying this one, use `div` instead.
         pub fn divEqV(self: *Self, vec: Self) void {
             self.divEq(vec.x, vec.y, vec.z, vec.w);
         }
 
         /// Divides this vector by `scalar` in-place.
         /// When the vector contains an integer type, this performs truncating division.
-        /// If you want to get a new vector without modifying this one, use `div()` instead.
+        /// If you want to get a new vector without modifying this one, use `div` instead.
         pub fn divEqS(self: *Self, scalar: T) void {
             self.divEq(scalar, scalar, scalar, scalar);
         }
@@ -296,7 +296,7 @@ pub fn Vec4(comptime T: type) type {
 
         /// Replaces each component of this vector with its rounded value in-place.
         /// Use this only if the type of this vector is a float.
-        /// If you want to get a new vector without modifying this one, use `round()` instead.
+        /// If you want to get a new vector without modifying this one, use `round` instead.
         pub fn roundEq(self: *Self) void {
             comptime std.debug.assert(@typeInfo(T) == .float);
             self.x = @round(self.x);
@@ -340,7 +340,7 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Returns the squared Euclidian distance between this point and `x`, `y`, `z` and `w`.
-        /// This is typically faster than `dist()` as it does not use `@sqrt()`.
+        /// This is typically faster than `dist()` as it does not use `@sqrt`.
         pub fn distSqr(self: Self, x: T, y: T, z: T, w: T) T {
             return ((x - self.x) * (x - self.x)) +
                 ((y - self.y) * (y - self.y)) +
@@ -349,7 +349,7 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Returns the squared Euclidian distance between this point and `vec`.
-        /// This is typically faster than `dist()` as it does not use `@sqrt()`.
+        /// This is typically faster than `dist()` as it does not use `@sqrt`.
         pub fn distSqrV(self: Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y, vec.z, vec.w);
         }

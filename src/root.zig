@@ -48,6 +48,14 @@ pub const Mat4f = Mat4(f32);
 /// 64-bit floating `Mat4`
 pub const Mat4d = Mat4(f64);
 
+pub const Quat = @import("quat.zig").Quat;
+
+/// 32-bit floating `Quat`
+pub const Quatf = Quat(f32);
+
+/// 64-bit floating `Quat`
+pub const Quatd = Quat(f64);
+
 const VecB = @import("vec_b.zig").VecB;
 
 pub const Vec2b = VecB(2);
