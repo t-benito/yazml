@@ -342,7 +342,7 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Returns the squared Euclidian distance between this point and `x`, `y`, `z` and `w`.
-        /// This is typically faster than `dist()` as it does not use `@sqrt`.
+        /// This is typically faster than `dist` as it does not use `@sqrt`.
         pub fn distSqr(self: Self, x: T, y: T, z: T, w: T) T {
             return ((x - self.x) * (x - self.x)) +
                 ((y - self.y) * (y - self.y)) +
@@ -351,7 +351,7 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Returns the squared Euclidian distance between this point and `vec`.
-        /// This is typically faster than `dist()` as it does not use `@sqrt`.
+        /// This is typically faster than `dist` as it does not use `@sqrt`.
         pub fn distSqrV(self: Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y, vec.z, vec.w);
         }

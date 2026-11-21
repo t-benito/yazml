@@ -40,16 +40,16 @@ pub fn Quat(comptime T: type) type {
             );
         }
 
-        pub fn len(self: Quat) T {
+        pub fn len(self: Self) T {
             return @sqrt((self.w * self.w) + self.xyz.lenSqr());
         }
 
-        pub fn lenSqr(self: Quat) T {
+        pub fn lenSqr(self: Self) T {
             return (self.w * self.w) + self.xyz.lenSqr();
         }
 
         /// Returns this `Quat` as an axis-angle representation.
-        pub fn axisAngle(self: Quat) Vec4 {
+        pub fn axisAngle(self: Self) Vec4 {
             if (@abs(self.w) > 1.0)
                 self.normalizeEq();
 
@@ -71,7 +71,7 @@ pub fn Quat(comptime T: type) type {
         }
 
         /// Returns this `Quat` as an euler angle representation.
-        pub fn toEuler(self: Quat) Vec3 {
+        pub fn toEuler(self: Self) Vec3 {
             const res = Vec3.ZERO;
 
             const threshold = 0.4999995;
@@ -101,7 +101,7 @@ pub fn Quat(comptime T: type) type {
         }
 
         /// Returns a new `Quat` containing the normalized values of this.
-        pub fn normalize(self: Quat) Quat {
+        pub fn normalize(self: Self) Self {
             const scale = 1.0 / self.len();
             return init(
                 self.xyz.mulS(scale),
@@ -111,14 +111,14 @@ pub fn Quat(comptime T: type) type {
 
         /// Normalizes this `Quat` to unit length (1) in-place.
         /// If you want to get a new one without modifying this one, use `normalize` instead.
-        pub fn normalizeEq(self: *Quat) void {
+        pub fn normalizeEq(self: *Self) void {
             const scale = 1.0 / self.len();
             self.xyz.mulEqS(scale);
             self.w *= scale;
         }
 
         /// Returns the inverse of this `Quat`.
-        pub fn invert(self: Quat) Self {
+        pub fn invert(self: Self) Self {
             const lensq = self.lenSqr();
             if (lensq != 0.0) {
                 const i = 1.0 / lensq;
