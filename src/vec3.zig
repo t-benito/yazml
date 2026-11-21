@@ -249,9 +249,10 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Returns a new `Vec3` with the rounded values of each component.
-        /// Use this only if the vector type is a float.
+        /// When the vector type is not a float, this function returns a copy of the original.
         pub fn round(self: Self) Self {
-            comptime std.debug.assert(@typeInfo(T) == .float);
+            if (@typeInfo(T) != .float)
+                return self.*;
             return init(
                 @round(self.x),
                 @round(self.y),
@@ -260,10 +261,11 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Replaces each component of this vector with its rounded value in-place.
-        /// Use this only if the type of this vector is a float.
+        /// If the vector type is not a float, this function does nothing.
         /// If you want to get a new vector without modifying this one, use `round` instead.
-        pub fn roundEq(self: *Self) Self {
-            comptime std.debug.assert(@typeInfo(T) == .float);
+        pub fn roundEq(self: *Self) void {
+            if (@typeInfo(T) != .float)
+                return;
             self.x = @round(self.x);
             self.y = @round(self.y);
             self.z = @round(self.z);
@@ -298,13 +300,13 @@ pub fn Vec3(comptime T: type) type {
         }
 
         /// Returns the squared Euclidian distance between this point and `x`, `y` and `z`.
-        /// This is typically faster than `dst()` as it does not use `@sqrt`.
+        /// This is typically faster than `dist` as it does not use `@sqrt`.
         pub fn distSqr(self: Self, x: T, y: T, z: T) T {
             return ((x - self.x) * (x - self.x)) + ((y - self.y) * (y - self.y)) + ((z - self.z) * (z - self.z));
         }
 
         /// Returns the squared Euclidian distance between this point and `vec`.
-        /// This is typically faster than `dst()` as it does not use `@sqrt`.
+        /// This is typically faster than `distV` as it does not use `@sqrt`.
         pub fn distSqrV(self: Self, vec: Self) T {
             return self.distSqr(vec.x, vec.y, vec.z);
         }

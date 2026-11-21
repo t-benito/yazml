@@ -283,9 +283,10 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Returns a new `Vec4` with the rounded values of each component.
-        /// Use this only if the type of this vector is a float.
+        /// When the vector type is not a float, this function returns a copy of the original.
         pub fn round(self: Self) Self {
-            comptime std.debug.assert(@typeInfo(T) == .float);
+            if (@typeInfo(T) != .float)
+                return self.*;
             return init(
                 @round(self.x),
                 @round(self.y),
@@ -295,10 +296,11 @@ pub fn Vec4(comptime T: type) type {
         }
 
         /// Replaces each component of this vector with its rounded value in-place.
-        /// Use this only if the type of this vector is a float.
+        /// If the vector type is not a float, this function does nothing.
         /// If you want to get a new vector without modifying this one, use `round` instead.
         pub fn roundEq(self: *Self) void {
-            comptime std.debug.assert(@typeInfo(T) == .float);
+            if (@typeInfo(T) != .float)
+                return;
             self.x = @round(self.x);
             self.y = @round(self.y);
             self.z = @round(self.z);

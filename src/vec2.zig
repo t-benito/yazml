@@ -60,7 +60,7 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns pointers to this vectors components as an array of `T`.
-        pub fn ptrArray(self: Self) [2]*T {
+        pub fn ptrArray(self: *Self) [2]*T {
             return [2]*T{ &self.x, &self.y };
         }
 
@@ -155,6 +155,12 @@ pub fn Vec2(comptime T: type) type {
             self.plusEq(vec.x, vec.y);
         }
 
+        /// Adds `scalar` to this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `addS` instead.
+        pub fn plusEqS(self: *Self, scalar: T) void {
+            self.plusEq(scalar, scalar);
+        }
+
         /// Subtracts `x` and `y` from this vector in-place.
         /// If you want to get a new vector without modifying the original, use `sub` instead.
         pub fn subEq(self: *Self, x: T, y: T) void {
@@ -163,9 +169,15 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Subtracts `vec` from this vector in-place.
-        /// If you want to return a new vector without modifying the original, use `subV` instead.
+        /// If you want to get a new vector without modifying the original, use `subV` instead.
         pub fn subEqV(self: *Self, vec: Self) void {
             self.subEq(vec.x, vec.y);
+        }
+
+        /// Subtracts `scalar` from this vector in-place.
+        /// If you want to get a new vector without modifying the original, use `subS` instead.
+        pub fn subEqS(self: *Self, scalar: T) void {
+            self.subEq(scalar, scalar);
         }
 
         /// Divides this vector's components by `x` and `y` in-place.
@@ -224,9 +236,10 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Returns a new `Vec2` with the rounded values of each component.
-        /// Use this only if the type of this vector is a float.
+        /// When the vector type is not a float, this function returns a copy of the original.
         pub fn round(self: Self) Self {
-            comptime std.debug.assert(@typeInfo(T) == .float);
+            if (comptime @typeInfo(T) != .float)
+                return self.*;
             return init(
                 @round(self.x),
                 @round(self.y),
@@ -234,10 +247,11 @@ pub fn Vec2(comptime T: type) type {
         }
 
         /// Replaces each component of this vector with its rounded value in-place.
-        /// Use this only if the type of this vector is a float.
+        /// If the vector type is not a float, this function does nothing.
         /// If you want to get a new vector without modifying this one, use `round` instead.
-        pub fn roundEq(self: *Self) Self {
-            comptime std.debug.assert(@typeInfo(T) == .float);
+        pub fn roundEq(self: *Self) void {
+            if (comptime @typeInfo(T) != .float)
+                return;
             self.x = @round(self.x);
             self.y = @round(self.y);
         }

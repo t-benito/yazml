@@ -1,4 +1,5 @@
 const std = @import("std");
+const math = std.math;
 const m = @import("root.zig");
 
 pub fn Quat(comptime T: type) type {
@@ -43,13 +44,17 @@ pub fn Quat(comptime T: type) type {
             return @sqrt((self.w * self.w) + self.xyz.lenSqr());
         }
 
+        pub fn lenSqr(self: Quat) T {
+            return (self.w * self.w) + self.xyz.lenSqr();
+        }
+
         /// Returns this `Quat` as an axis-angle representation.
         pub fn axisAngle(self: Quat) Vec4 {
             if (@abs(self.w) > 1.0)
                 self.normalizeEq();
 
             var res = Vec4.ZERO;
-            res.w = 2.0 * std.math.acos(self.w);
+            res.w = 2.0 * math.acos(self.w);
 
             const den = @sqrt(1.0 - (self.w * self.w));
             if (den > 0.0001) {
@@ -60,6 +65,36 @@ pub fn Quat(comptime T: type) type {
                 res.x = Vec3.UNIT_X.x;
                 res.y = Vec3.UNIT_X.y;
                 res.z = Vec3.UNIT_X.z;
+            }
+
+            return res;
+        }
+
+        /// Returns this `Quat` as an euler angle representation.
+        pub fn toEuler(self: Quat) Vec3 {
+            const res = Vec3.ZERO;
+
+            const threshold = 0.4999995;
+
+            const sqw = self.w * self.w;
+            const sqx = self.xyz.x * self.xyz.x;
+            const sqy = self.xyz.y * self.xyz.y;
+            const sqz = self.xyz.z * self.xyz.z;
+            const unit = sqx * sqy + sqz + sqw;
+
+            const thresTest = (self.xyz.x * self.xyz.z) + (self.w * self.xyz.y);
+            if (thresTest > threshold * unit) {
+                res.z = 2 * math.atan2(self.xyz.x, self.w);
+                res.y = math.pi / 2;
+                res.x = 0;
+            } else if (thresTest < -threshold * unit) {
+                res.z = -2 * math.atan2(self.xyz.x, self.xyz.w);
+                res.y = -math.pi / 2;
+                res.x = 0;
+            } else {
+                res.z = math.atan2(2 * ((self.w * self.xyz.z) - (self.xyz.x * self.xyz.y)), sqw + sqx - sqy - sqz);
+                res.y = math.asin(2 * thresTest / unit);
+                res.x = math.atan2(2 * ((self.w * self.xyz.x) - (self.xyz.y * self.xyz.z)), sqw - sqx - sqy + sqz);
             }
 
             return res;
@@ -76,10 +111,23 @@ pub fn Quat(comptime T: type) type {
 
         /// Normalizes this `Quat` to unit length (1) in-place.
         /// If you want to get a new one without modifying this one, use `normalize` instead.
-        pub fn normalizeEq(self: *Quat) Quat {
+        pub fn normalizeEq(self: *Quat) void {
             const scale = 1.0 / self.len();
             self.xyz.mulEqS(scale);
             self.w *= scale;
+        }
+
+        /// Returns the inverse of this `Quat`.
+        pub fn invert(self: Quat) Self {
+            const lensq = self.lenSqr();
+            if (lensq != 0.0) {
+                const i = 1.0 / lensq;
+                return init(
+                    self.xyz.mulS(-i),
+                    self.w * i,
+                );
+            }
+            return self.*;
         }
     };
 }
